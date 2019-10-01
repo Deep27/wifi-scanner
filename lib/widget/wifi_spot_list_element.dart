@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class WifiSpot extends StatelessWidget {
+class WifiSpotListElement extends StatelessWidget {
 
   final String _name;
 
-  WifiSpot(this._name);
+  WifiSpotListElement(this._name);
 
   @override
   Widget build(BuildContext context) {

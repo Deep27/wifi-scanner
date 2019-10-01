@@ -9,13 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  wifi: 0.1.5
+  logger: 0.7.0+2
 
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
+  flutter_test: 
+    sdk: flutter 
 
 flutter: 
   uses-material-design: true
