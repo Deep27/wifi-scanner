@@ -24,12 +24,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchData() async {
-    _log.i('SSID: $_ssid, Level: $_level, IP: $_ip');
+    _log.i('[Before update] SSID: $_ssid, Level: $_level, IP: $_ip, Results: $_wifiResults');
     String ssid = await Wifi.ssid;
     int level = await Wifi.level;
     String ip = await Wifi.ip;
     // var result = Wifi.connection('ssid', 'password');
-    List<WifiResult> results = await Wifi.list('key');
+    List<WifiResult> results = await Wifi.list('RT-5WiFi-F0FB');
     setState(() {
       _ssid = ssid;
       _level = level;
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       _wifiResults.clear();
       _wifiResults.addAll(results);
     });
-    _log.i('SSID: $_ssid, Level: $_level, IP: $_ip');
+    _log.i('[After update] SSID: $_ssid, Level: $_level, IP: $_ip, Results: $_wifiResults');
   }
 
   @override
