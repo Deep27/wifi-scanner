@@ -6,24 +6,16 @@ import 'package:wifi_scanner/widget/wifi_spot_list_element.dart';
 final Logger _log = Logger();
 
 class HomePage extends StatefulWidget {
-  String ssid;
-  int level;
-  String ip;
-  var result;
-  List<WifiResult> wifiResults;
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   String _ssid = 'Fetching SSID';
-
-  // String ssid = await Wifi.ssid;
-  // int level = await Wifi.level;
-  // String ip = await Wifi.ip;
-  // var result = Wifi.connection('ssid', 'password');
-  // List<WifiResult> list = await Wifi.list('key');
+  int _level = -1;
+  String _ip = 'Fetching IP';
+  var _result;
+  final List<WifiResult> _wifiResults = [];
 
   @override
   initState() {
@@ -32,12 +24,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchData() async {
-    _log.i('SSID: $_ssid');
+    _log.i('SSID: $_ssid, Level: $_level, IP: $_ip');
     String ssid = await Wifi.ssid;
+    int level = await Wifi.level;
+    String ip = await Wifi.ip;
+    // var result = Wifi.connection('ssid', 'password');
+    List<WifiResult> results = await Wifi.list('key');
     setState(() {
       _ssid = ssid;
+      _level = level;
+      _ip = ip;
+      // _result = result;
+      _wifiResults.clear();
+      _wifiResults.addAll(results);
     });
-    _log.i('SSID: $_ssid');
+    _log.i('SSID: $_ssid, Level: $_level, IP: $_ip');
   }
 
   @override
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            WifiSpotListElement(_ssid),
+            WifiSpotListElement(_ssid, _level, _ip, _result, _wifiResults),
           ],
         ),
       ),
