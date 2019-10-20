@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import './widget/home_page.dart';
+import 'package:wifi_scanner/widget/spots_page.dart';
 
 void main() => runApp(WifiScannerApp());
 
@@ -10,7 +9,7 @@ class WifiScannerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wifi Scanner',
       theme: ThemeData(primarySwatch: Colors.brown),
-      home: HomePage(),
+      home: SpotsPage(),
     );
   }
 }

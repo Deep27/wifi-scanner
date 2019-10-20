@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  wifi: 0.1.5
   logger: 0.7.0+2
+  simple_permissions: ^0.1.9
 
   cupertino_icons: ^0.1.2
 
