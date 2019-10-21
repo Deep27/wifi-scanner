@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/model/spot_data.dart';
 import 'package:wifi_scanner/permission_handler.dart';
-import 'package:wifi_scanner/widget/spot_list_element.dart';
+import 'package:wifi_scanner/widget/spot_item/spot_list_item.dart';
 
 final Logger _LOG = Logger();
 
@@ -18,7 +18,7 @@ class _SpotsPageState extends State<SpotsPage> {
 
   String _platformVersion = 'Unknown';
 
-  final List<SpotData> _spotsData = [SpotData("SSID", -1)];
+  final List<SpotData> _spotsData = [];
 
   void _initPlatformState() async {
     String platformVersion;
@@ -38,20 +38,23 @@ class _SpotsPageState extends State<SpotsPage> {
   }
 
   void _fetchSpotsData() async {
-    List ssids;
+    List<Map<String, dynamic>> scanResults = [];
     try {
-      ssids = await platform.invokeMethod('scan');
-      _LOG.i('Found SSIDs $ssids');
+      List<dynamic> result = await platform.invokeMethod('scan');
+      scanResults = result
+          .cast<Map<dynamic, dynamic>>()
+          .map((r) => r.cast<String, dynamic>())
+          .toList();
     } on PlatformException {
       _LOG.e('Error');
-      ssids.clear();
+      scanResults.clear();
     }
 
     setState(() {
       _spotsData.clear();
-      ssids.forEach((ssid) => _spotsData.add(SpotData(ssid, -1))); 
+      _spotsData.addAll(SpotData.fromResults(scanResults));
     });
-  } 
+  }
 
   @override
   void initState() {
@@ -72,17 +75,20 @@ class _SpotsPageState extends State<SpotsPage> {
           itemCount: _spotsData.length,
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () async {
-          var accessFineLocationPermissionGranted = await PermissionHandler.checkPermission(Permission.AccessFineLocation);
-          if (accessFineLocationPermissionGranted) { 
-            _fetchSpotsData();
-          } else {
-            await PermissionHandler.requestPermission(Permission.AccessFineLocation);
-          }
-        }
-      ),
+          child: Icon(Icons.refresh),
+          onPressed: () async {
+            var accessFineLocationPermissionGranted =
+                await PermissionHandler.checkPermission(
+                    Permission.AccessFineLocation);
+            if (accessFineLocationPermissionGranted) {
+              _fetchSpotsData();
+            } else {
+              await PermissionHandler.requestPermission(
+                  Permission.AccessFineLocation);
+            }
+          }),
     );
   }
 }

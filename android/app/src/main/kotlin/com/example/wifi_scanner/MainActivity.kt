@@ -4,10 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
@@ -15,10 +15,10 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterActivity() {
 
+    private val TAG = "MainActivity"
     private val CHANNEL = "scanner/scan"
     private lateinit var wifiManager: WifiManager
-    private lateinit var scanResults: List<ScanResult>
-    private lateinit var ssids: List<String>
+    private lateinit var scanResults: List<Map<String, Any>>
 
     private val wifiScanReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -30,8 +30,7 @@ class MainActivity : FlutterActivity() {
             }
             if (success) {
                 val scanned = wifiManager.startScan()
-                scanResults = wifiManager.scanResults
-                ssids = wifiManager.scanResults.map { it.SSID }
+                scanResults = MyScanResult.mapResults(wifiManager.scanResults)
             }
         }
     }
@@ -49,9 +48,10 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "scan") {
                 wifiManager.startScan()
-                scanResults = wifiManager.scanResults
-                ssids = wifiManager.scanResults.map { it.SSID }
-                result.success(ssids)
+                scanResults = MyScanResult.mapResults(wifiManager.scanResults)
+                Log.i(TAG, "Networks found: ${wifiManager.scanResults.size}")
+                wifiManager.scanResults.forEachIndexed { i, r -> Log.i(TAG, "$i:\t$r") }
+                result.success(scanResults)
             } else {
                 result.notImplemented()
             }
