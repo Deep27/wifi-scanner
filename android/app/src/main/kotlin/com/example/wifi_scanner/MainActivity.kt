@@ -16,7 +16,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity : FlutterActivity() {
 
     private val TAG = "MainActivity"
-    private val CHANNEL = "scanner/scan"
+    private val CHANNEL = "network/wifi"
     private lateinit var wifiManager: WifiManager
     private lateinit var scanResults: List<Map<String, Any>>
 
@@ -52,6 +52,9 @@ class MainActivity : FlutterActivity() {
                 Log.i(TAG, "Networks found: ${wifiManager.scanResults.size}")
                 wifiManager.scanResults.forEachIndexed { i, r -> Log.i(TAG, "$i:\t$r") }
                 result.success(scanResults)
+            } else if (call.method == "speedtest") {
+                val speedtestTask = SpeedTestTask(MainThreadResult(result))
+                speedtestTask.execute()
             } else {
                 result.notImplemented()
             }
