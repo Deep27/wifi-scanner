@@ -25,14 +25,18 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
       }
       try {
         List<dynamic> result = await _platform.invokeMethod('scan');
+        var wait = await Future.delayed(Duration(seconds: 1, milliseconds: 500),
+            () {}); // @TODO remove this line
         result = result
             .cast<Map<dynamic, dynamic>>()
             .map((r) => r.cast<String, dynamic>())
             .toList();
+        result.sort(
+            (m1, m2) => (m2['level'] as int).compareTo((m1['level'] as int)));
         yield ScanSuccess(result);
       } on PlatformException {
         yield ScanError('Error while scanning networks.');
       }
     }
-  } 
+  }
 }

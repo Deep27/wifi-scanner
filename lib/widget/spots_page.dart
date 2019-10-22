@@ -143,8 +143,7 @@ class _SpotsPageState extends State<SpotsPage> {
                   label: Text('Networks'),
                   tooltip: 'scan networks',
                   onPressed: () {
-                    final networksScanBloc =
-                        BlocProvider.of<NetworksScanBloc>(context);
+                    final networksScanBloc = BlocProvider.of<NetworksScanBloc>(context);
                     networksScanBloc.add(StartScan());
                   },
                 );
