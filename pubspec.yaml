@@ -7,12 +7,14 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  cupertino_icons: ^0.1.2
+  # device_info: ^0.4.1
+  equatable: ^0.6.1
   flutter:
     sdk: flutter
+  flutter_bloc: ^1.0.0
   logger: 0.7.0+2
-  simple_permissions: ^0.1.9
-
-  cupertino_icons: ^0.1.2
+  simple_permissions: ^0.1.9 
 
 dev_dependencies:
   flutter_test: 

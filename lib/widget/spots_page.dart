@@ -62,18 +62,42 @@ class _SpotsPageState extends State<SpotsPage> {
     _initPlatformState();
   }
 
+  // _getDeviceInfo() async {
+  //   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  //   AndroidDeviceInfo adf = await deviceInfo.androidInfo;
+  //   return adf.model;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Wi-Fi Scanner'),
       ),
-      body: Container(
-        width: double.infinity,
-        child: ListView.builder(
-          itemBuilder: (ctx, index) => SpotListElement(_spotsData[index]),
-          itemCount: _spotsData.length,
-        ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Text(
+              'Versions',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              child: ListView.builder(
+                itemBuilder: (ctx, index) => SpotListElement(_spotsData[index]),
+                itemCount: _spotsData.length,
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(

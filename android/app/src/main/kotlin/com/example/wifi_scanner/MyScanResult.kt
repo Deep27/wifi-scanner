@@ -14,7 +14,7 @@ class MyScanResult {
             return resultsToSave
         }
 
-        fun resultToMapObject(scanResult: ScanResult): HashMap<String, Any> {
+        private fun resultToMapObject(scanResult: ScanResult): HashMap<String, Any> {
             return hashMapOf(
                     "SSID" to scanResult.SSID,
                     "BSSID" to scanResult.BSSID,
