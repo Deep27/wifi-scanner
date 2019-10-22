@@ -1,10 +1,13 @@
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:wifi_scanner/bloc/networks_scan/networks_scan_bloc.dart';
+import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
+import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
 import 'package:wifi_scanner/model/spot_data.dart';
-import 'package:wifi_scanner/permission_handler.dart';
 import 'package:wifi_scanner/widget/deviceinfo.dart';
 import 'package:wifi_scanner/widget/speedtest.dart';
 import 'package:wifi_scanner/widget/spot_item/spot_list_item.dart';
@@ -12,6 +15,8 @@ import 'package:wifi_scanner/widget/spot_item/spot_list_item.dart';
 final Logger _LOG = Logger();
 
 class SpotsPage extends StatefulWidget {
+  SpotsPage({Key key}) : super(key: key);
+
   @override
   _SpotsPageState createState() => _SpotsPageState();
 }
@@ -19,16 +24,16 @@ class SpotsPage extends StatefulWidget {
 class _SpotsPageState extends State<SpotsPage> {
   static const platform = const MethodChannel('network/wifi');
 
-  String _platformVersion = 'Unknown';
+  final networksScanBloc = NetworksScanBloc();
   final Map<String, double> _speedtestResults = {
     'kilobits': 0,
     'megabits': 0,
     'kilobytes': 0,
     'megabytes': 0
   };
-  AndroidDeviceInfo _deviceInfo;
 
-  final List<SpotData> _spotsData = [];
+  AndroidDeviceInfo _deviceInfo;
+  String _platformVersion = 'Unknown';
 
   void _initPlatformState() async {
     String platformVersion;
@@ -37,32 +42,12 @@ class _SpotsPageState extends State<SpotsPage> {
     } on PlatformException {
       platformVersion = 'Failed to get platform version';
     }
-
     if (!mounted) {
       return;
     }
-
     setState(() {
       _platformVersion = platformVersion;
     });
-  }
-
-  void _fetchSpotsData() async {
-    List<Map<String, dynamic>> scanResults = [];
-    try {
-      List<dynamic> result = await platform.invokeMethod('scan');
-      scanResults = result
-          .cast<Map<dynamic, dynamic>>()
-          .map((r) => r.cast<String, dynamic>())
-          .toList();
-      setState(() {
-        _spotsData.clear();
-        _spotsData.addAll(SpotData.fromResults(scanResults));
-      });
-    } on PlatformException {
-      _LOG.e('Error');
-      scanResults.clear();
-    }
   }
 
   void _speedtest() async {
@@ -86,6 +71,12 @@ class _SpotsPageState extends State<SpotsPage> {
     _getDeviceInfo();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    networksScanBloc.close();
+  }
+
   _getDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo adf = await deviceInfo.androidInfo;
@@ -100,44 +91,71 @@ class _SpotsPageState extends State<SpotsPage> {
       appBar: AppBar(
         title: Text('Wi-Fi Scanner'),
       ),
-      body: Column(
-        children: <Widget>[
-          DeviceInfoWidget('${_deviceInfo.brand} ${_deviceInfo.model}', _platformVersion),
-          SpeedtestWidget(_speedtestResults),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              child: ListView.builder(
-                itemBuilder: (ctx, index) => SpotListElement(_spotsData[index]),
-                itemCount: _spotsData.length,
+      body: BlocProvider<NetworksScanBloc>(
+        builder: (context) => networksScanBloc,
+        child: Column(
+          children: <Widget>[
+            DeviceInfoWidget(
+                '${_deviceInfo.brand} ${_deviceInfo.model}', _platformVersion),
+            SpeedtestWidget(_speedtestResults),
+            Expanded(
+              child: BlocBuilder<NetworksScanBloc, NetworksScanState>(
+                bloc: networksScanBloc,
+                builder: (BuildContext context, NetworksScanState state) {
+                  if (state is ScanSuccess) {
+                    return Container(
+                      width: double.infinity,
+                      child: ListView.builder(
+                        itemBuilder: (ctx, index) => SpotListElement(
+                            SpotData.fromResult(state.scanResults[index])),
+                        itemCount: state.scanResults.length,
+                      ),
+                    );
+                  } else if (state is ScanningNetworks) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        'Networks information will be here.',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          FloatingActionButton(
-            child: Icon(Icons.refresh),
-            tooltip: 'scan networks',
-            onPressed: () async {
-              var accessFineLocationPermissionGranted =
-                  await PermissionHandler.checkPermission(
-                      Permission.AccessFineLocation);
-              if (accessFineLocationPermissionGranted) {
-                _fetchSpotsData();
-              } else {
-                await PermissionHandler.requestPermission(
-                    Permission.AccessFineLocation);
-              }
-            },
+          BlocProvider<NetworksScanBloc>(
+            builder: (context) => networksScanBloc,
+            child: BlocBuilder<NetworksScanBloc, NetworksScanState>(
+              bloc: networksScanBloc,
+              builder: (BuildContext context, NetworksScanState state) {
+                return FloatingActionButton.extended( 
+                  icon: Icon(Icons.refresh),
+                  label: Text('Networks'),
+                  tooltip: 'scan networks',
+                  onPressed: () {
+                    final networksScanBloc =
+                        BlocProvider.of<NetworksScanBloc>(context);
+                    networksScanBloc.add(StartScan());
+                  },
+                );
+              },
+            ),
           ),
           SizedBox(width: 10),
-          FloatingActionButton(
-            child: Icon(Icons.file_download),
-            tooltip: 'speedtest',
+          FloatingActionButton.extended(
+            icon: Icon(Icons.file_download),
+            label: Text('Speedtest'), 
+            tooltip: 'speedtest', 
             onPressed: _speedtest,
           ),
         ],
