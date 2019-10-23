@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wifi_scanner/model/spot_data.dart';
-import 'package:wifi_scanner/widget/spot_item/spot_ssid.dart';
+import 'package:wifi_scanner/widget/page/spots/spot_item/spot_ssid.dart';
 
-class SpotListElement extends StatelessWidget {
+class SpotListItem extends StatelessWidget {
   final SpotData _spotData;
 
-  SpotListElement(this._spotData);
+  SpotListItem(this._spotData);
 
   @override
   Widget build(BuildContext context) {
