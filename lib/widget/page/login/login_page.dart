@@ -19,10 +19,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _focus = FocusNode();
+
+  final _gospFocus = FocusNode();
+  final _branchFocus = FocusNode();
+  final _passwordFocus = FocusNode();
 
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _gospController = TextEditingController();
+  final _branchController = TextEditingController();
 
   LoginBloc _loginBloc;
   AuthBloc _authBloc;
@@ -70,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           textInputAction: TextInputAction.next,
                           onSubmitted: (_) =>
-                              FocusScope.of(context).requestFocus(_focus),
+                              FocusScope.of(context).requestFocus(_gospFocus),
                           controller: _loginController,
                           decoration: InputDecoration(
                             hintText: 'Login',
@@ -83,10 +88,43 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50, vertical: 5),
                         child: TextField(
-                          focusNode: _focus,
+                          focusNode: _gospFocus,
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (_) =>
+                              FocusScope.of(context).requestFocus(_branchFocus),
+                          controller: _gospController,
+                          decoration: InputDecoration(
+                            hintText: 'GOSP',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 5),
+                        child: TextField(
+                          focusNode: _branchFocus,
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (_) =>
+                              FocusScope.of(context).requestFocus(_passwordFocus),
+                          controller: _branchController,
+                          decoration: InputDecoration(
+                            hintText: 'Branch',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 5),
+                        child: TextField(
+                          focusNode: _passwordFocus,
                           obscureText: true,
                           textInputAction: TextInputAction.done,
                           onEditingComplete: _auth,
+                          controller: _passwordController,
                           decoration: InputDecoration(
                             hintText: 'Password',
                             border: OutlineInputBorder(
@@ -100,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text('Login'),
                             onPressed: _auth,
                             color: Theme.of(context).buttonColor,
-                          )),
+                          )), 
                     ],
                   ),
                 );
