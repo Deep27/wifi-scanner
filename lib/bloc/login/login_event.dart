@@ -6,14 +6,33 @@ abstract class LoginEvent extends Equatable {
 }
 
 class Login extends LoginEvent {
-
   final String login;
+  final String gosp;
+  final String branch;
   final String password;
 
-  Login({@required this.login, @required this.password});
+  Login(
+      {@required this.login,
+      @required this.gosp,
+      @required this.branch,
+      @required this.password});
 
   @override
-  String toString() => 'Login process started { login: "$login", password: "$password" }';
+  String toString() =>
+      'Login process started { login: "$login", password: "$password" }';
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoginError extends LoginEvent {
+  final String errorMessage;
+
+  LoginError(this.errorMessage);
+
+  @override
+  String toString() =>
+      'Login failure { $errorMessage }';
 
   @override
   List<Object> get props => [];
