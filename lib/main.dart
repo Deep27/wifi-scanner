@@ -6,6 +6,7 @@ import 'package:wifi_scanner/bloc/auth/auth_event.dart';
 import 'package:wifi_scanner/bloc/auth/auth_state.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/widget/page/login/login_page.dart';
+import 'package:wifi_scanner/widget/page/login/pin_code_page.dart';
 import 'package:wifi_scanner/widget/page/splash_page.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
