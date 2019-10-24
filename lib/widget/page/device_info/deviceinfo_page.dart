@@ -56,7 +56,8 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
           child: Column(
             children: <Widget>[
               Text('Device model: ${_deviceInfo.model}'),
-              Text('Platform version: $_platformVersion')
+              Text('Platform version: $_platformVersion'),
+              Text('Device ID: ${_deviceInfo.androidId}'),
             ],
           ),
         ),
