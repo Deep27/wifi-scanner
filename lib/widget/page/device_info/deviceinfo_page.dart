@@ -1,7 +1,6 @@
-import 'package:device_info/device_info.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/model/device_info.dart';
 
 class DeviceInfoPage extends StatefulWidget {
@@ -31,16 +30,19 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
     setState(() {
       _deviceInfo = deviceInfo;
     });
-  } 
+  }
 
   Center _getBody() => Center(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: <Widget>[
-              Text('Device model: ${_deviceInfo.androidDeviceInfo.model}'),
-              Text('Platform version: ${_deviceInfo.platformVersion}'),
-              Text('Device ID: ${_deviceInfo.androidDeviceInfo.androidId}'),
+              Text(
+                  'Device model: ${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.model : _deviceInfo.iosDeviceInfo.model}'),
+              Text(
+                  'Platform version: ${(Platform.isAndroid) ? _deviceInfo.platformVersion : _deviceInfo.iosDeviceInfo.systemVersion}'),
+              Text(
+                  'Device ID: ${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.androidId : _deviceInfo.iosDeviceInfo.identifierForVendor}'),
             ],
           ),
         ),
