@@ -7,13 +7,13 @@ abstract class LoginEvent extends Equatable {
 
 class Login extends LoginEvent {
   final String login;
-  final String gosp;
+  final String gosb;
   final String branch;
   final String password;
 
   Login(
       {@required this.login,
-      @required this.gosp,
+      @required this.gosb,
       @required this.branch,
       @required this.password});
 

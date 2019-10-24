@@ -1,7 +1,6 @@
 class Profile {
-
   static final tableName = 'profiles';
-  static final columnId = 'id'; 
+  static final columnId = 'id';
   static final columnCode = 'code';
   static final columnWifiNetworkSSIDs = 'wifiNetworkSSIDs';
   static final columnAlarmSignal = 'alarmSignal';
@@ -18,12 +17,28 @@ class Profile {
 
   Profile.fromMap(Map map) {
     code = map[columnCode];
-    wifiNetworksSSIDs = (map[columnWifiNetworkSSIDs] as List<dynamic>).cast<String>();
+    wifiNetworksSSIDs =
+        (map[columnWifiNetworkSSIDs] as List<dynamic>).cast<String>();
     alarmSignal = map[columnAlarmSignal];
     updatePeriod = map[columnUpdatePeriod];
-    webResources.addAll((map[columnWebResources] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((r) => r.cast<String, String>()).toList());
-    tcpResources.addAll((map[columnTcpResources] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((r) => r.cast<String, dynamic>()).toList());
-  } 
+    webResources.addAll((map[columnWebResources] as List<dynamic>)
+        .cast<Map<dynamic, dynamic>>()
+        .map((r) => r.cast<String, String>())
+        .toList());
+    tcpResources.addAll((map[columnTcpResources] as List<dynamic>)
+        .cast<Map<dynamic, dynamic>>()
+        .map((r) => r.cast<String, dynamic>())
+        .toList());
+  }
+
+  toMap() => {
+      columnCode: code,
+      columnAlarmSignal: alarmSignal,
+      columnUpdatePeriod: updatePeriod,
+      columnWifiNetworkSSIDs: wifiNetworksSSIDs,
+      columnWebResources: webResources,
+      columnTcpResources: tcpResources
+    }; 
 
   @override
   String toString() {
