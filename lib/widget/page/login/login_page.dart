@@ -1,14 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:wifi_scanner/bloc/auth/auth_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_event.dart';
 import 'package:wifi_scanner/bloc/login/login_state.dart';
 import 'package:wifi_scanner/model/device_info.dart';
+import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
+
+final _LOG = Logger();
 
 class LoginPage extends StatefulWidget {
   final UserRepository userRepository;
@@ -22,6 +30,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final _gospFocus = FocusNode();
   final _branchFocus = FocusNode();
   final _passwordFocus = FocusNode();
@@ -58,12 +67,12 @@ class _LoginPageState extends State<LoginPage> {
             bloc: _loginBloc,
             builder: (BuildContext context, LoginState state) {
               if (state is LoginInitial || state is LoginFailure) {
-                if (state is LoginFailure) { 
-                _onWidgetDidBuild(
-                    () => Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('${state.error}'),
-                          backgroundColor: Colors.red,
-                        )));
+                if (state is LoginFailure) {
+                  _onWidgetDidBuild(
+                      () => Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('${state.error}'),
+                            backgroundColor: Colors.red,
+                          )));
                 }
                 return Container(
                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -80,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                               FocusScope.of(context).requestFocus(_gospFocus),
                           controller: _loginController,
                           decoration: InputDecoration(
-                            hintText: 'Login',
+                            hintText: 'Логин',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),
@@ -96,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                               FocusScope.of(context).requestFocus(_branchFocus),
                           controller: _gospController,
                           decoration: InputDecoration(
-                            hintText: 'GOSP',
+                            hintText: 'ГОСБ',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),
@@ -112,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                               .requestFocus(_passwordFocus),
                           controller: _branchController,
                           decoration: InputDecoration(
-                            hintText: 'Branch',
+                            hintText: 'ВСП',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),
@@ -128,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                           onEditingComplete: _auth,
                           controller: _passwordController,
                           decoration: InputDecoration(
-                            hintText: 'Password',
+                            hintText: 'Пароль',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),
@@ -137,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: FlatButton(
-                            child: Text('Login'),
+                            child: Text('Авторизация'),
                             onPressed: _auth,
                             color: Theme.of(context).buttonColor,
                           )),
@@ -157,23 +166,39 @@ class _LoginPageState extends State<LoginPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) => callback());
 
   _auth() async {
-    if (1 == 0) { // @TODO some checks
+    if (1 == 0) {
+      // @TODO some checks
       _loginBloc.add(LoginError('1 == 1'));
     } else {
       DeviceInfo deviceInfo = await DeviceInfo.instance;
       User user = User.fromMap({
         User.columnId: null,
         User.columnLogin: _loginController.text,
-        User.columnGosp: _gospController.text,
+        User.columnGosb: _gospController.text,
         User.columnBranch: _branchController.text,
-        User.columnDeviceId: deviceInfo.androidDeviceInfo.androidId
+        User.columnDeviceSerialId: deviceInfo.androidDeviceInfo.androidId
       });
-      Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+      _postRegister(user);
     }
-    // _loginController.text;
-    // _passwordController.text;
-    // _LOG.i("Handling button onclick.");
-    // final weatherBloc = BlocProvider.of<WeatherBloc>(context);
-    // weatherBloc.add(GetWeather(cityName));
+  }
+
+  _postRegister(User user) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.hostHeader: 'wifi-analyzer.4qube.ru'
+    };
+    _LOG.i(user.toMap());
+    Response response =
+        await post('http://wifi-analyzer.4qube.ru/api/register', headers: headers, body: json.encode(user.toMap()));
+    int statusCode = response.statusCode;
+    if (statusCode == 200) {
+      _LOG.i(response.body);
+      Profile profile = Profile.fromMap(json.decode(response.body));
+      _LOG.i(profile.toString());
+      // Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+    } else { 
+      _loginBloc.add(LoginError('Status code: $statusCode'));
+    }
   }
 }
