@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wifi_scanner/bloc/auth/auth_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_bloc.dart';
+import 'package:wifi_scanner/bloc/login/login_event.dart';
 import 'package:wifi_scanner/bloc/login/login_state.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
@@ -19,7 +20,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final _gospFocus = FocusNode();
   final _branchFocus = FocusNode();
   final _passwordFocus = FocusNode();
@@ -55,14 +55,14 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocBuilder<LoginBloc, LoginState>(
             bloc: _loginBloc,
             builder: (BuildContext context, LoginState state) {
-              if (state is LoginFailure) {
+              if (state is LoginInitial || state is LoginFailure) {
+                if (state is LoginFailure) { 
                 _onWidgetDidBuild(
                     () => Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text('${state.error}'),
                           backgroundColor: Colors.red,
                         )));
-              }
-              if (state is LoginInitial) {
+                }
                 return Container(
                   padding: EdgeInsets.symmetric(vertical: 20),
                   alignment: Alignment.center,
@@ -106,8 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           focusNode: _branchFocus,
                           textInputAction: TextInputAction.next,
-                          onSubmitted: (_) =>
-                              FocusScope.of(context).requestFocus(_passwordFocus),
+                          onSubmitted: (_) => FocusScope.of(context)
+                              .requestFocus(_passwordFocus),
                           controller: _branchController,
                           decoration: InputDecoration(
                             hintText: 'Branch',
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text('Login'),
                             onPressed: _auth,
                             color: Theme.of(context).buttonColor,
-                          )), 
+                          )),
                     ],
                   ),
                 );
@@ -154,8 +154,12 @@ class _LoginPageState extends State<LoginPage> {
   _onWidgetDidBuild(Function callback) =>
       WidgetsBinding.instance.addPostFrameCallback((_) => callback());
 
-  _auth() {
-    Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+  _auth() async {
+    if (1 == 0) { // @TODO some checks
+      _loginBloc.add(LoginError('1 == 1'));
+    } else {
+      Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+    }
     // _loginController.text;
     // _passwordController.text;
     // _LOG.i("Handling button onclick.");
