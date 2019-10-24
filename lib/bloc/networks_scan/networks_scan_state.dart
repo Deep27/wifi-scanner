@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:wifi_scanner/model/scan_result.dart';
 
 abstract class NetworksScanState extends Equatable {
   const NetworksScanState();
@@ -15,7 +16,7 @@ class ScanningNetworks extends NetworksScanState {
 }
 
 class ScanSuccess extends NetworksScanState {
-  final List<Map<String, dynamic>> scanResults;
+  final List<ScanResult> scanResults;
 
   ScanSuccess(this.scanResults);
 

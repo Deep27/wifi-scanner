@@ -1,4 +1,5 @@
 class User {
+
   static final tableName = 'users';
   static final columnId = 'id';
   static final columnLogin = 'login';
@@ -42,7 +43,7 @@ class User {
     _lng = 88.88888;
   }
 
-  Map<String, dynamic> toMap() {
+  toMap() {
     final map = <String, dynamic>{
       columnLogin: _login,
       columnBranch: _branch,

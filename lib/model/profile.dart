@@ -1,4 +1,5 @@
 class Profile {
+
   static final tableName = 'profiles';
   static final columnId = 'id';
   static final columnCode = 'code';

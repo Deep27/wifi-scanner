@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  # connectivity: ^0.4.5+1
+  connectivity: ^0.4.5+1
   cupertino_icons: ^0.1.2
   device_info: 0.4.0+1
   equatable: ^0.6.1

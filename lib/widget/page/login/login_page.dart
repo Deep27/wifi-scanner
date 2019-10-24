@@ -15,6 +15,7 @@ import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/utils/http_utils.dart';
 import 'package:wifi_scanner/widget/page/login/pin_code_page.dart';
 
 final _LOG = Logger();
@@ -35,10 +36,10 @@ class _LoginPageState extends State<LoginPage> {
   final _branchFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  final _loginController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _gospController = TextEditingController();
-  final _branchController = TextEditingController();
+  final _loginController = TextEditingController(text: 'A name');
+  final _passwordController = TextEditingController(text: 'A password');
+  final _gospController = TextEditingController(text: '9038');
+  final _branchController = TextEditingController(text: '01259');
   bool _autoValidate = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -246,25 +247,27 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _postRegister(User user) async {
-    Map<String, String> headers = {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.hostHeader: 'wifi-analyzer.4qube.ru'
-    };
     _LOG.i(user.toMap());
-    Response response = await post('http://wifi-analyzer.4qube.ru/api/register',
-        headers: headers, body: json.encode(user.toMap()));
+    Response response = await HttpUtils.registerUser(user);
+    _LOG.i(response.body);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
       _LOG.i(response.body);
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
       final prefs = await SharedPreferences.getInstance();
+      final deviceInfo = await DeviceInfo.instance; 
+      _LOG.i("platform version: ${deviceInfo.androidDeviceInfo.version}");
+      prefs.setString('deviceInfoSerialId', Platform.isAndroid ? deviceInfo.androidDeviceInfo.androidId : deviceInfo.iosDeviceInfo.identifierForVendor);
+      prefs.setString('platform', Platform.isAndroid ? 'Android' : 'iOS');
+      prefs.setString('platformVersion', deviceInfo.platformVersion);
+      prefs.setString('deviceModel', Platform.isAndroid ? deviceInfo.androidDeviceInfo.device : deviceInfo.iosDeviceInfo.model);
       prefs.setString('profile', json.encode(profile.toMap()));
       prefs.setString('user', json.encode(user.toMap()));
       Navigator.of(context).pushReplacement(Router.createRoute(PinCodePage()));
     } else {
-      _loginBloc.add(LoginError('Status code: $statusCode'));
+      _LOG.e('Error (code $statusCode): ${response.body}');
+      _loginBloc.add(LoginError('Error (code $statusCode): ${response.body}'));
     }
   }
 }

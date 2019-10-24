@@ -1,13 +1,32 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
+import 'package:wifi_scanner/model/scan_result.dart';
 import 'package:wifi_scanner/permission_handler.dart';
+import 'package:wifi_scanner/utils/current_network_utils.dart';
+import 'package:wifi_scanner/utils/http_utils.dart';
+
+final _LOG = Logger();
 
 class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
   static const _platform = const MethodChannel('network/wifi');
+
+  SharedPreferences _prefs;
+
+  NetworksScanBloc() {
+    _initPrefs();
+  }
+
+  _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   NetworksScanState get initialState => InitialNetworksScanState();
@@ -24,7 +43,7 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         return;
       }
       try {
-        List<dynamic> result = await _platform.invokeMethod('scan');
+        List<dynamic> result = await _platform.invokeMethod('scan'); 
         var wait = await Future.delayed(Duration(seconds: 1, milliseconds: 500),
             () {}); // @TODO remove this line
         result = result
@@ -33,10 +52,73 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
             .toList();
         result.sort(
             (m1, m2) => (m2['level'] as int).compareTo((m1['level'] as int)));
-        yield ScanSuccess(result);
+        result = result.map((r) => ScanResult(
+          ssid: r['SSID'],
+          level: r['level'],
+          bssid: r['BSSID'],
+          frequency: r['frequency'],
+          bandwidth: r['channelWidth'],
+          timestamp: r['timestamp']
+        )).toList();
+        yield ScanSuccess(result); 
+
+        _LOG.i('SUCCESS RESULT');
+
+        int time = DateTime.now().millisecondsSinceEpoch;
+        int profileUpdatedAt = 10000;
+        String profileCode = "CODE";
+        Map user = json.decode(_prefs.getString('user'));
+        user.remove('deviceSerialId');
+        user['lat'] = user['location']['lat'];
+        user['lng'] = user['location']['lng'];
+        user.remove('location');
+        Map deviceInfo = {
+          'deviceSerialId': json.decode(_prefs.getString('user'))['deviceSerialId'],
+          'platformVersion': _prefs.getString('platformVersion'),
+          'platform': _prefs.getString('platform'),
+          'deviceModel': _prefs.getString('deviceModel')
+        };
+        List<Map> networksAvailable = [];
+        result.forEach((r) => networksAvailable.add((r as ScanResult).toMap()));
+        _LOG.i('networks available');
+
+        CurrentNetworkUtils cnu = await CurrentNetworkUtils.instance;
+        String usedSsid = cnu.wifiName;
+        String usedBssid = cnu.bssid;
+
+        Map usedNetwork = networksAvailable.firstWhere((n) => n[ScanResult.columnSsid] == usedSsid && n[ScanResult.columnBssid] == usedBssid);
+
+        Map requestBody = {
+          'time': time,
+          'profileUpdatedAt': profileUpdatedAt,
+          'profileCode': profileCode,
+          'user': user,
+          'deviceInfo': deviceInfo,
+          'networksAvailable': networksAvailable,
+          'usedNetwork': networksAvailable[0],
+        }; 
+
+        // send data or save to db
+        Response response = await HttpUtils.sendScanResults(requestBody);
+
+        int statusCode = response.statusCode;
+        if (statusCode == 200) {
+          _LOG.i(response.body);
+        } else {
+          _LOG.e(response.body);
+        }
+
       } on PlatformException {
         yield ScanError('Error while scanning networks.');
       }
     }
+  }
+
+  _testSpeed() {
+
+  }
+
+  _testAwailability() {
+
   }
 }
