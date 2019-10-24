@@ -33,8 +33,8 @@ class DatabaseHelper {
         ${User.columnId} INTEGER PRIMARY KEY,
         ${User.columnLogin} VARCHAR NOT NULL,
         ${User.columnBranch} VARCHAR NOT NULL,
-        ${User.columnGosp} VARCHAR NOT NULL,
-        ${User.columnDeviceId} VARCHAR NOT NULL
+        ${User.columnGosb} VARCHAR NOT NULL,
+        ${User.columnDeviceSerialId} VARCHAR NOT NULL
       )
     ''');
   }
@@ -54,8 +54,8 @@ class DatabaseHelper {
           User.columnId,
           User.columnLogin,
           User.columnBranch,
-          User.columnGosp,
-          User.columnDeviceId
+          User.columnGosb,
+          User.columnDeviceSerialId
         ],
         where: '${User.columnId} = ?',
         whereArgs: [id]);
