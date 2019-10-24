@@ -1,70 +1,95 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_lock_screen/flutter_lock_screen.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:passcode_screen/circle.dart';
+import 'package:passcode_screen/keyboard.dart';
+import 'package:passcode_screen/passcode_screen.dart';
+import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/widget/page/login/login_faq.dart';
+import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
-class PassCodeScreen extends StatefulWidget {
-  PassCodeScreen({Key key, this.title}) : super(key: key);
 
+class PinCodePage extends StatefulWidget {
+  PinCodePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _PassCodeScreenState createState() => new _PassCodeScreenState();
+  State<StatefulWidget> createState() => _PinCodePageState();
 }
 
-class _PassCodeScreenState extends State<PassCodeScreen> {
-  bool isFingerprint;
+class _PinCodePageState extends State<PinCodePage> {
+  final StreamController<bool> _verificationNotifier =
+      StreamController<bool>.broadcast();
 
-  Future<Null> biometrics() async {
-    final LocalAuthentication auth = new LocalAuthentication();
-    bool authenticated = false;
-
-    try {
-      authenticated = await auth.authenticateWithBiometrics(
-          localizedReason: 'Scan your fingerprint to authenticate',
-          useErrorDialogs: true,
-          stickyAuth: false);
-    } on PlatformException catch (e) {
-      print(e);
-    }
-    if (!mounted) return;
-    if (authenticated) {
-      setState(() {
-        isFingerprint = true;
-      });
-    }
-  }
+  bool isAuthenticated = false;
 
   @override
   Widget build(BuildContext context) {
-    var myPass = [1, 2, 3, 4];
-    return LockScreen(
-        title: "This is Screet ",
-        passLength: myPass.length,
-        bgImage: "images/pass_code_bg.jpg",
-        fingerPrintImage: "images/fingerprint.png",
-        showFingerPass: true,
-        fingerFunction: biometrics,
-        fingerVerify: isFingerprint,
-        borderColor: Colors.white,
-        showWrongPassDialog: true,
-        wrongPassContent: "Wrong pass please try again.",
-        wrongPassTitle: "Opps!",
-        wrongPassCancelButtonText: "Cancel",
-        passCodeVerify: (passcode) async {
-          for (int i = 0; i < myPass.length; i++) {
-            if (passcode[i] != myPass[i]) {
-              return false;
-            }
-          }
-
-          return true;
-        },
-        onSuccess: () {
-          Navigator.of(context).pushReplacement(
-              new MaterialPageRoute(builder: (BuildContext context) {
-                return Text("sdasd");
-              }));
-        });
+    return Scaffold(
+      body: PasscodeScreen(
+        title: 'Введите пароль',
+        titleColor: Colors.grey,
+        circleUIConfig: CircleUIConfig(
+            borderColor: Colors.grey, fillColor: Colors.grey, circleSize: 30),
+        keyboardUIConfig: KeyboardUIConfig(
+            digitBorderWidth: 1,
+            primaryColor: Colors.green,
+            deleteButtonTextStyle: TextStyle(color: Colors.grey, fontSize: 15),
+            digitTextStyle: TextStyle(fontSize: 30, color: Colors.green)),
+        passwordEnteredCallback: _onPasscodeEntered,
+        cancelLocalizedText: 'Выход',
+        deleteLocalizedText: 'Удалить',
+        shouldTriggerVerification: _verificationNotifier.stream,
+        backgroundColor: Colors.white,
+        cancelCallback: _onPasscodeCancelled,
+      ),
+    );
   }
+
+
+  _showLockScreen(BuildContext context,
+      {bool opaque,
+      CircleUIConfig circleUIConfig,
+      KeyboardUIConfig keyboardUIConfig}) {
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+          opaque: opaque,
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              PasscodeScreen(
+            title: 'Enter App Passcode',
+            circleUIConfig: circleUIConfig,
+            keyboardUIConfig: keyboardUIConfig,
+            passwordEnteredCallback: _onPasscodeEntered,
+            cancelLocalizedText: 'Cancel',
+            deleteLocalizedText: 'Delete',
+            shouldTriggerVerification: _verificationNotifier.stream,
+            backgroundColor: Colors.black.withOpacity(0.8),
+            cancelCallback: _onPasscodeCancelled,
+          ),
+        ));
+  }
+
+
+  _onPasscodeEntered(String enteredPasscode) {
+    bool isValid = '111111' == enteredPasscode;
+    _verificationNotifier.add(isValid);
+    if (isValid) {
+      setState(() {
+        this.isAuthenticated = isValid;
+      });
+    }
+    Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+  }
+
+  _onPasscodeCancelled() {
+    Navigator.of(context).pushReplacement(Router.createRoute(LoginFaq()));
+  }
+
+  @override
+  void dispose() {
+    _verificationNotifier.close();
+    super.dispose();
+  }
+
 }

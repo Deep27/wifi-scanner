@@ -10,6 +10,7 @@ import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
 import 'package:wifi_scanner/model/scan_result.dart';
 import 'package:wifi_scanner/permission_handler.dart';
+import 'package:wifi_scanner/utils/current_network_utils.dart';
 import 'package:wifi_scanner/utils/http_utils.dart';
 
 final _LOG = Logger();
@@ -73,14 +74,19 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         user.remove('location');
         Map deviceInfo = {
           'deviceSerialId': json.decode(_prefs.getString('user'))['deviceSerialId'],
-          // 'platformVersion': _prefs.getDouble('platformVersion'),
-          'platformVersion': 'A version',
+          'platformVersion': _prefs.getString('platformVersion'),
           'platform': _prefs.getString('platform'),
           'deviceModel': _prefs.getString('deviceModel')
         };
         List<Map> networksAvailable = [];
         result.forEach((r) => networksAvailable.add((r as ScanResult).toMap()));
         _LOG.i('networks available');
+
+        CurrentNetworkUtils cnu = await CurrentNetworkUtils.instance;
+        String usedSsid = cnu.wifiName;
+        String usedBssid = cnu.bssid;
+
+        Map usedNetwork = networksAvailable.firstWhere((n) => n[ScanResult.columnSsid] == usedSsid && n[ScanResult.columnBssid] == usedBssid);
 
         Map requestBody = {
           'time': time,
@@ -95,7 +101,6 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         // send data or save to db
         Response response = await HttpUtils.sendScanResults(requestBody);
 
-        _LOG.i(requestBody);
         int statusCode = response.statusCode;
         if (statusCode == 200) {
           _LOG.i(response.body);
@@ -107,5 +112,13 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         yield ScanError('Error while scanning networks.');
       }
     }
+  }
+
+  _testSpeed() {
+
+  }
+
+  _testAwailability() {
+
   }
 }

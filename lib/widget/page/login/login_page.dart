@@ -16,7 +16,7 @@ import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/utils/http_utils.dart';
-import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
+import 'package:wifi_scanner/widget/page/login/pin_code_page.dart';
 
 final _LOG = Logger();
 
@@ -61,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         body: BlocProvider<LoginBloc>(
           builder: (context) => _loginBloc,
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -74,7 +75,8 @@ class _LoginPageState extends State<LoginPage> {
               if (state is LoginInitial || state is LoginFailure) {
                 if (state is LoginFailure) {
                   _onWidgetDidBuild(
-                      () => Scaffold.of(context).showSnackBar(SnackBar(
+                          () =>
+                          Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('${state.error}'),
                             backgroundColor: Colors.red,
                           )));
@@ -91,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           textInputAction: TextInputAction.next,
                           decoration: const InputDecoration(
-                            hintText: 'Имя аккаунта',
+                            hintText: 'Учетная запись Sigma',
                             labelText: 'Пользователь',
                           ),
                           onSubmitted: (_) =>
@@ -120,8 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           focusNode: _branchFocus,
                           textInputAction: TextInputAction.next,
-                          onSubmitted: (_) => FocusScope.of(context)
-                              .requestFocus(_passwordFocus),
+                          onSubmitted: (_) =>
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocus),
                           controller: _branchController,
                           decoration: InputDecoration(
                             hintText: 'ВСП',
@@ -146,9 +149,11 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: FlatButton(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme
+                                .of(context)
+                                .primaryColor,
                             textColor: Colors.white,
-                            child: Text('Войти'),
+                            child: Text('Далее'),
                             onPressed: _auth,
                           )),
                     ],
@@ -165,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _onWidgetDidBuild(Function callback) =>
       WidgetsBinding.instance.addPostFrameCallback((_) => callback());
+
 
   _auth() async {
     _loginBloc.add(LoginInProgress());
@@ -188,22 +194,25 @@ class _LoginPageState extends State<LoginPage> {
   _postRegister(User user) async {
     _LOG.i(user.toMap());
     Response response = await HttpUtils.registerUser(user);
+    _LOG.i(response.body);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
       _LOG.i(response.body);
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
       final prefs = await SharedPreferences.getInstance();
-      final deviceInfo = await DeviceInfo.instance;
+      final deviceInfo = await DeviceInfo.instance; 
+      _LOG.i("platform version: ${deviceInfo.androidDeviceInfo.version}");
       prefs.setString('deviceInfoSerialId', Platform.isAndroid ? deviceInfo.androidDeviceInfo.androidId : deviceInfo.iosDeviceInfo.identifierForVendor);
       prefs.setString('platform', Platform.isAndroid ? 'Android' : 'iOS');
-      // prefs.setDouble('platformVersion', Platform.isAndroid ? deviceInfo.androidDeviceInfo.version : deviceInfo.iosDeviceInfo.systemVersion);
+      prefs.setString('platformVersion', deviceInfo.platformVersion);
       prefs.setString('deviceModel', Platform.isAndroid ? deviceInfo.androidDeviceInfo.device : deviceInfo.iosDeviceInfo.model);
       prefs.setString('profile', json.encode(profile.toMap()));
       prefs.setString('user', json.encode(user.toMap()));
-      Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+      Navigator.of(context).pushReplacement(Router.createRoute(PinCodePage()));
     } else {
-      _loginBloc.add(LoginError('Status code: $statusCode'));
+      _LOG.e('Error (code $statusCode): ${response.body}');
+      _loginBloc.add(LoginError('Error (code $statusCode): ${response.body}'));
     }
-  } 
+  }
 }

@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  # connectivity: ^0.4.5+1
+  connectivity: ^0.4.5+1
   cupertino_icons: ^0.1.2
   device_info: 0.4.0+1
   equatable: ^0.6.1
@@ -21,8 +21,7 @@ dependencies:
   shared_preferences: ^0.5.4
   simple_permissions: ^0.1.9 
   sqflite: ^1.1.7+1
-  flutter_lock_screen: '^1.0.5'
-  local_auth: 0.6.0+1
+  passcode_screen: 1.0.2
 
 dev_dependencies:
   flutter_test: 
