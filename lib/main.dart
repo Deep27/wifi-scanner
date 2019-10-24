@@ -41,27 +41,27 @@ class _IntermeterAppState extends State<IntermeterApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Sberbank Intermeter',
-        theme: ThemeData(primarySwatch: Colors.lightGreen),
-        home: BlocProvider<AuthBloc>(
-          builder: (context) => _authBloc,
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: _authBloc,
-            builder: (BuildContext context, AuthState state) {
-              _LOG.i('Started app. State: $state');
-              if (state is AuthUninitialized || state is AuthInProgress) {
-                return SplashPage();
-              }
-              if (state is AuthAuthenticated) {
-                return SpotsPage();
-              }
-              if (state is AuthUnauthenticated) {
-                return LoginPage(userRepository: userRepository);
-              } else {
-                return null;
-              }
-            },
-          ),
-        ),
-      );
+    title: 'Sberbank Intermeter',
+    theme: ThemeData(primarySwatch: Colors.lightGreen),
+    home: BlocProvider<AuthBloc>(
+      builder: (context) => _authBloc,
+      child: BlocBuilder<AuthBloc, AuthState>(
+        bloc: _authBloc,
+        builder: (BuildContext context, AuthState state) {
+          _LOG.i('Started app. State: $state');
+          if (state is AuthUninitialized || state is AuthInProgress) {
+            return SplashPage();
+          }
+          if (state is AuthAuthenticated) {
+            return SpotsPage();
+          }
+          if (state is AuthUnauthenticated) {
+            return LoginPage(userRepository: userRepository);
+          } else {
+            return null;
+          }
+        },
+      ),
+    ),
+  );
 }
