@@ -36,10 +36,13 @@ class _LoginPageState extends State<LoginPage> {
   final _branchFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  final _loginController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _gospController = TextEditingController(text: "9038");
-  final _branchController = TextEditingController(text: "01259");
+  final _loginController = TextEditingController(text: 'A name');
+  final _passwordController = TextEditingController(text: 'A password');
+  final _gospController = TextEditingController(text: '9038');
+  final _branchController = TextEditingController(text: '01259');
+  bool _autoValidate = false;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   LoginBloc _loginBloc;
   AuthBloc _authBloc;
@@ -61,8 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         body: BlocProvider<LoginBloc>(
           builder: (context) => _loginBloc,
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -75,8 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               if (state is LoginInitial || state is LoginFailure) {
                 if (state is LoginFailure) {
                   _onWidgetDidBuild(
-                          () =>
-                          Scaffold.of(context).showSnackBar(SnackBar(
+                      () => Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('${state.error}'),
                             backgroundColor: Colors.red,
                           )));
@@ -84,79 +85,107 @@ class _LoginPageState extends State<LoginPage> {
                 return Container(
                   padding: EdgeInsets.symmetric(vertical: 20),
                   alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 0),
-                        child: TextField(
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            hintText: 'Учетная запись Sigma',
-                            labelText: 'Пользователь',
-                          ),
-                          onSubmitted: (_) =>
-                              FocusScope.of(context).requestFocus(_gospFocus),
-                          controller: _loginController,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 1),
-                        child: TextField(
-                          focusNode: _gospFocus,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            hintText: 'Головное отделение Сбербанка',
-                            labelText: 'ГОСБ',
-                          ),
-                          onSubmitted: (_) =>
-                              FocusScope.of(context).requestFocus(_branchFocus),
-                          controller: _gospController,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 1),
-                        child: TextField(
-                          focusNode: _branchFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (_) =>
-                              FocusScope.of(context)
-                                  .requestFocus(_passwordFocus),
-                          controller: _branchController,
-                          decoration: InputDecoration(
-                            hintText: 'ВСП',
-                            labelText: 'Внутреннее структурное подразделение',
+                  child: Form(
+                    autovalidate: _autoValidate,
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 0),
+                          child: TextFormField(
+                            validator: (String arg) {
+                              if(arg.length < 4)
+                                return 'Поле не может быть пустым или менее трех символов';
+                              else
+                                return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              hintText: 'Учетная запись Sigma',
+                              labelText: 'Пользователь',
+                            ),
+                            onSaved: (_) =>
+                                FocusScope.of(context).requestFocus(_gospFocus),
+                            controller: _loginController,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 10),
-                        child: TextField(
-                          focusNode: _passwordFocus,
-                          obscureText: true,
-                          textInputAction: TextInputAction.done,
-                          onEditingComplete: _auth,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            hintText: 'Пароль',
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 1),
+                          child: TextFormField(
+                            focusNode: _gospFocus,
+                            validator: (String arg) {
+                              if(arg.isEmpty)
+                                return 'Поле не может быть пустым';
+                              else
+                                return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              hintText: 'Головное отделение Сбербанка',
+                              labelText: 'ГОСБ',
+//                              errorText: _validate ? string : null,
+                            ),
+                            onSaved: (_) => FocusScope.of(context)
+                                .requestFocus(_branchFocus),
+                            controller: _gospController,
                           ),
                         ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: FlatButton(
-                            color: Theme
-                                .of(context)
-                                .primaryColor,
-                            textColor: Colors.white,
-                            child: Text('Далее'),
-                            onPressed: _auth,
-                          )),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 1),
+                          child: TextFormField(
+                            focusNode: _branchFocus,
+                            validator: (String arg) {
+                              if(arg.isEmpty)
+                                return 'Поле не может быть пустым';
+                              else
+                                return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            onSaved: (_) => FocusScope.of(context)
+                                .requestFocus(_passwordFocus),
+                            controller: _branchController,
+                            decoration: InputDecoration(
+                              hintText: 'ВСП',
+                              labelText: 'Внутреннее структурное подразделение',
+                              //errorText: _validate ? string : null,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 10),
+                          child: TextFormField(
+                            validator: (String arg) {
+                              if(arg.isEmpty || arg.length <= 4)
+                                return 'Поле не может быть пустым или менее четырех символов';
+                              else
+                                return null;
+                            },
+                            focusNode: _passwordFocus,
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            onEditingComplete: _auth,
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              hintText: 'Пароль',
+                              // errorText: _validate ? string : null,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: FlatButton(
+                              color: Theme.of(context).primaryColor,
+                              textColor: Colors.white,
+                              child: Text('Далее'),
+                              onPressed: _validateInputs,
+                            )),
+                      ],
+                    ),
                   ),
                 );
               } else {
@@ -170,7 +199,6 @@ class _LoginPageState extends State<LoginPage> {
 
   _onWidgetDidBuild(Function callback) =>
       WidgetsBinding.instance.addPostFrameCallback((_) => callback());
-
 
   _auth() async {
     _loginBloc.add(LoginInProgress());
@@ -188,6 +216,33 @@ class _LoginPageState extends State<LoginPage> {
             : deviceInfo.iosDeviceInfo.identifierForVendor
       });
       _postRegister(user);
+    }
+  }
+
+  String validateName(String value) {
+    if (value.length < 0)
+      return 'Поле не может быть пустым';
+    else
+      return null;
+  }
+
+  String validateGosb(String value) {
+    if (value.length < 0) //&& value.contains(new RegExp("\d{1,4}"))
+      return 'Поле не может быть пустым.';
+    else
+      return null;
+  }
+
+  void _validateInputs() {
+    if (_formKey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+      _formKey.currentState.save();
+      _auth();
+    } else {
+//    If all data are not valid then start auto validation.
+      setState(() {
+        _autoValidate = true;
+      });
     }
   }
 

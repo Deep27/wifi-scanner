@@ -41,7 +41,7 @@ class _IntermeterAppState extends State<IntermeterApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Sberbank Intermeter',
+    title: 'Интерметр',
     theme: ThemeData(primarySwatch: Colors.lightGreen),
     home: BlocProvider<AuthBloc>(
       builder: (context) => _authBloc,
