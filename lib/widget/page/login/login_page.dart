@@ -86,38 +86,34 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 10),
+                        horizontal: 50, vertical: 0),
                     child: TextField(
                       textInputAction: TextInputAction.next,
-                      onSubmitted: (_) =>
-                          FocusScope.of(context).requestFocus(_gospFocus),
-                      controller: _loginController,
-                      decoration: InputDecoration(
-                        hintText: 'Логин',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                      decoration: const InputDecoration(
+                        hintText: 'Имя аккаунта',
+                        labelText: 'Пользователь',
                       ),
+                      onSubmitted: (_) => FocusScope.of(context).requestFocus(_gospFocus),
+                      controller: _loginController,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 5),
+                        horizontal: 50, vertical: 1),
                     child: TextField(
                       focusNode: _gospFocus,
                       textInputAction: TextInputAction.next,
-                      onSubmitted: (_) =>
-                          FocusScope.of(context).requestFocus(_branchFocus),
-                      controller: _gospController,
-                      decoration: InputDecoration(
-                        hintText: 'ГОСБ',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                      decoration: const InputDecoration(
+                        hintText: 'Головное отделение Сбербанка',
+                        labelText: 'ГОСБ',
                       ),
+                      onSubmitted: (_) => FocusScope.of(context).requestFocus(_branchFocus),
+                      controller: _gospController,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 5),
+                        horizontal: 50, vertical: 1),
                     child: TextField(
                       focusNode: _branchFocus,
                       textInputAction: TextInputAction.next,
@@ -126,14 +122,13 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _branchController,
                       decoration: InputDecoration(
                         hintText: 'ВСП',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        labelText: 'Внутреннее структурное подразделение',
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 5),
+                        horizontal: 50, vertical: 10),
                     child: TextField(
                       focusNode: _passwordFocus,
                       obscureText: true,
@@ -142,17 +137,16 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       decoration: InputDecoration(
                         hintText: 'Пароль',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: FlatButton(
-                        child: Text('Авторизация'),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        child: Text('Войти'),
                         onPressed: _auth,
-                        color: Theme.of(context).buttonColor,
                       )),
                 ],
               ),
