@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/bloc/auth/auth_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_event.dart';
@@ -197,9 +198,12 @@ class _LoginPageState extends State<LoginPage> {
       _LOG.i(response.body);
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('profile', json.encode(profile.toMap()));
+      prefs.setString('user', json.encode(user.toMap()));
       Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
     } else {
       _loginBloc.add(LoginError('Status code: $statusCode'));
     }
-  }
+  } 
 }
