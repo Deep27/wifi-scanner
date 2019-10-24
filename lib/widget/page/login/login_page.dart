@@ -38,8 +38,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _gospController = TextEditingController(text: "9040");
-  final _branchController = TextEditingController(text: "01224");
+  final _gospController = TextEditingController(text: "9038");
+  final _branchController = TextEditingController(text: "01259");
 
   LoginBloc _loginBloc;
   AuthBloc _authBloc;
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
       final deviceInfo = await DeviceInfo.instance;
       prefs.setString('deviceInfoSerialId', Platform.isAndroid ? deviceInfo.androidDeviceInfo.androidId : deviceInfo.iosDeviceInfo.identifierForVendor);
       prefs.setString('platform', Platform.isAndroid ? 'Android' : 'iOS');
-      prefs.setString('platformVersion', Platform.isAndroid ? deviceInfo.androidDeviceInfo.version : deviceInfo.iosDeviceInfo.systemVersion);
+      // prefs.setDouble('platformVersion', Platform.isAndroid ? deviceInfo.androidDeviceInfo.version : deviceInfo.iosDeviceInfo.systemVersion);
       prefs.setString('deviceModel', Platform.isAndroid ? deviceInfo.androidDeviceInfo.device : deviceInfo.iosDeviceInfo.model);
       prefs.setString('profile', json.encode(profile.toMap()));
       prefs.setString('user', json.encode(user.toMap()));

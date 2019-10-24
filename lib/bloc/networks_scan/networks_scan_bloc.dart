@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
@@ -10,6 +12,7 @@ import 'package:wifi_scanner/model/scan_result.dart';
 import 'package:wifi_scanner/permission_handler.dart';
 import 'package:wifi_scanner/utils/http_utils.dart';
 
+final _LOG = Logger();
 
 class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
   static const _platform = const MethodChannel('network/wifi');
@@ -58,14 +61,47 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         )).toList();
         yield ScanSuccess(result); 
 
-        int timestamp = DateTime.now().millisecondsSinceEpoch;
+        _LOG.i('SUCCESS RESULT');
+
+        int time = DateTime.now().millisecondsSinceEpoch;
+        int profileUpdatedAt = 10000;
+        String profileCode = "CODE";
+        Map user = json.decode(_prefs.getString('user'));
+        user.remove('deviceSerialId');
+        user['lat'] = user['location']['lat'];
+        user['lng'] = user['location']['lng'];
+        user.remove('location');
         Map deviceInfo = {
-          'deviceSerialId': _prefs.getString('deviceSerialId')
+          'deviceSerialId': json.decode(_prefs.getString('user'))['deviceSerialId'],
+          // 'platformVersion': _prefs.getDouble('platformVersion'),
+          'platformVersion': 'A version',
+          'platform': _prefs.getString('platform'),
+          'deviceModel': _prefs.getString('deviceModel')
         };
+        List<Map> networksAvailable = [];
+        result.forEach((r) => networksAvailable.add((r as ScanResult).toMap()));
+        _LOG.i('networks available');
+
+        Map requestBody = {
+          'time': time,
+          'profileUpdatedAt': profileUpdatedAt,
+          'profileCode': profileCode,
+          'user': user,
+          'deviceInfo': deviceInfo,
+          'networksAvailable': networksAvailable,
+          'usedNetwork': networksAvailable[0],
+        }; 
 
         // send data or save to db
-        Response response = await HttpUtils.sendScanResults();
+        Response response = await HttpUtils.sendScanResults(requestBody);
 
+        _LOG.i(requestBody);
+        int statusCode = response.statusCode;
+        if (statusCode == 200) {
+          _LOG.i(response.body);
+        } else {
+          _LOG.e(response.body);
+        }
 
       } on PlatformException {
         yield ScanError('Error while scanning networks.');

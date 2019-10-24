@@ -3,9 +3,6 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wifi_scanner/model/mappable.dart';
-import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/user.dart';
 
 abstract class HttpUtils {
@@ -29,5 +26,5 @@ abstract class HttpUtils {
   static registerUser(User user) async =>
       await _httpPost(json.encode(user.toMap()), _URL_REGISTER);
 
-  static sendScanResults() => null;
+  static sendScanResults(Map body) => _httpPost(json.encode(body), _URL_DEVICES_DATA);
 }
