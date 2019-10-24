@@ -37,3 +37,8 @@ class LoginError extends LoginEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoginInProgress extends LoginEvent { 
+  @override
+  List<Object> get props => [];
+}
