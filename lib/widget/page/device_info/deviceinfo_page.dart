@@ -2,6 +2,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:wifi_scanner/model/device_info.dart';
 
 class DeviceInfoPage extends StatefulWidget {
   @override
@@ -9,8 +10,7 @@ class DeviceInfoPage extends StatefulWidget {
 }
 
 class _DeviceInfoPageState extends State<DeviceInfoPage> {
-  AndroidDeviceInfo _deviceInfo;
-  String _platformVersion = 'Unknown';
+  DeviceInfo _deviceInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -23,41 +23,24 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
   @override
   void initState() {
     super.initState();
-    _initPlatformState();
     _getDeviceInfo();
   }
 
   _getDeviceInfo() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo adf = await deviceInfo.androidInfo;
+    DeviceInfo deviceInfo = await DeviceInfo.instance;
     setState(() {
-      _deviceInfo = adf;
+      _deviceInfo = deviceInfo;
     });
-  }
-
-  void _initPlatformState() async {
-    String platformVersion;
-    try {
-      platformVersion = await SimplePermissions.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version';
-    }
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
+  } 
 
   Center _getBody() => Center(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: <Widget>[
-              Text('Device model: ${_deviceInfo.model}'),
-              Text('Platform version: $_platformVersion'),
-              Text('Device ID: ${_deviceInfo.androidId}'),
+              Text('Device model: ${_deviceInfo.androidDeviceInfo.model}'),
+              Text('Platform version: ${_deviceInfo.platformVersion}'),
+              Text('Device ID: ${_deviceInfo.androidDeviceInfo.androidId}'),
             ],
           ),
         ),

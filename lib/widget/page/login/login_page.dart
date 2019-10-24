@@ -4,6 +4,8 @@ import 'package:wifi_scanner/bloc/auth/auth_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_bloc.dart';
 import 'package:wifi_scanner/bloc/login/login_event.dart';
 import 'package:wifi_scanner/bloc/login/login_state.dart';
+import 'package:wifi_scanner/model/device_info.dart';
+import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
@@ -158,6 +160,14 @@ class _LoginPageState extends State<LoginPage> {
     if (1 == 0) { // @TODO some checks
       _loginBloc.add(LoginError('1 == 1'));
     } else {
+      DeviceInfo deviceInfo = await DeviceInfo.instance;
+      User user = User.fromMap({
+        User.columnId: null,
+        User.columnLogin: _loginController.text,
+        User.columnGosp: _gospController.text,
+        User.columnBranch: _branchController.text,
+        User.columnDeviceId: deviceInfo.androidDeviceInfo.androidId
+      });
       Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
     }
     // _loginController.text;
