@@ -15,7 +15,8 @@ import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
-import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
+import 'package:wifi_scanner/widget/page/login/pin_code_page.dart';
+
 
 final _LOG = Logger();
 
@@ -60,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         body: BlocProvider<LoginBloc>(
           builder: (context) => _loginBloc,
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -73,7 +75,8 @@ class _LoginPageState extends State<LoginPage> {
               if (state is LoginInitial || state is LoginFailure) {
                 if (state is LoginFailure) {
                   _onWidgetDidBuild(
-                      () => Scaffold.of(context).showSnackBar(SnackBar(
+                          () =>
+                          Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('${state.error}'),
                             backgroundColor: Colors.red,
                           )));
@@ -90,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           textInputAction: TextInputAction.next,
                           decoration: const InputDecoration(
-                            hintText: 'Имя аккаунта',
+                            hintText: 'Учетная запись Sigma',
                             labelText: 'Пользователь',
                           ),
                           onSubmitted: (_) =>
@@ -119,8 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           focusNode: _branchFocus,
                           textInputAction: TextInputAction.next,
-                          onSubmitted: (_) => FocusScope.of(context)
-                              .requestFocus(_passwordFocus),
+                          onSubmitted: (_) =>
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocus),
                           controller: _branchController,
                           decoration: InputDecoration(
                             hintText: 'ВСП',
@@ -145,9 +149,11 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: FlatButton(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme
+                                .of(context)
+                                .primaryColor,
                             textColor: Colors.white,
-                            child: Text('Войти'),
+                            child: Text('Далее'),
                             onPressed: _auth,
                           )),
                     ],
@@ -164,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _onWidgetDidBuild(Function callback) =>
       WidgetsBinding.instance.addPostFrameCallback((_) => callback());
+
 
   _auth() async {
     _loginBloc.add(LoginInProgress());
@@ -201,9 +208,9 @@ class _LoginPageState extends State<LoginPage> {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('profile', json.encode(profile.toMap()));
       prefs.setString('user', json.encode(user.toMap()));
-      Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+      Navigator.of(context).pushReplacement(Router.createRoute(PinCodePage()));
     } else {
       _loginBloc.add(LoginError('Status code: $statusCode'));
     }
-  } 
+  }
 }
