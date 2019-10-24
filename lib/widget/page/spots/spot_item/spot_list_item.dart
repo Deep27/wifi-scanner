@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wifi_scanner/model/spot_data.dart';
+import 'package:wifi_scanner/model/scan_result.dart';
 import 'package:wifi_scanner/widget/page/spots/spot_item/spot_ssid.dart';
 
 class SpotListItem extends StatelessWidget {
-  final SpotData _spotData;
+  final ScanResult _scanResult;
 
-  SpotListItem(this._spotData);
+  SpotListItem(this._scanResult);
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +14,16 @@ class SpotListItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          SpotSsid(_spotData.ssid),
+          SpotSsid(_scanResult.ssid),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Text('Level: ${_spotData.level}'),
-                Text('BSSID: ${_spotData.bssid}'),
-                Text('frequency: ${_spotData.frequency}'),
+                Text('Level: ${_scanResult.level}'),
+                Text('BSSID: ${_scanResult.bssid}'),
+                Text('frequency: ${_scanResult.frequency}'),
+                Text('channels: ${_scanResult.channels}'),
               ],
             ),
           ),

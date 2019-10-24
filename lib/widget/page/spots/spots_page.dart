@@ -74,8 +74,7 @@ class _SpotsPageState extends State<SpotsPage> {
               return Container(
                 width: double.infinity,
                 child: ListView.builder(
-                  itemBuilder: (ctx, index) => SpotListItem(
-                      SpotData.fromResult(state.scanResults[index])),
+                  itemBuilder: (ctx, index) => SpotListItem(state.scanResults[index]),
                   itemCount: state.scanResults.length,
                 ),
               );

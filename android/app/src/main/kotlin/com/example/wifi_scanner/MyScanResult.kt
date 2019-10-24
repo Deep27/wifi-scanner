@@ -19,7 +19,9 @@ class MyScanResult {
                     "SSID" to scanResult.SSID,
                     "BSSID" to scanResult.BSSID,
                     "level" to scanResult.level,
-                    "frequency" to scanResult.frequency
+                    "frequency" to scanResult.frequency,
+                    "channelWidth" to scanResult.channelWidth,
+                    "timestamp" to scanResult.timestamp
             )
         }
     }

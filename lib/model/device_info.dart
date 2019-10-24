@@ -7,6 +7,7 @@ import 'package:simple_permissions/simple_permissions.dart';
 class DeviceInfo {
   AndroidDeviceInfo _androidDeviceInfo;
   IosDeviceInfo _iosDeviceInfo;
+  String _platform;
   String _platformVersion;
 
   AndroidDeviceInfo get androidDeviceInfo => _androidDeviceInfo;
@@ -29,7 +30,8 @@ class DeviceInfo {
     DeviceInfo instance = DeviceInfo._privateConstructor();
     DeviceInfoPlugin plugin = DeviceInfoPlugin();
 
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid) { 
+      instance._platform = 'Android';
       AndroidDeviceInfo adf = await plugin.androidInfo;
       instance._androidDeviceInfo = adf;
       String platformVersion;
@@ -40,6 +42,7 @@ class DeviceInfo {
       }
       instance._platformVersion = platformVersion;
     } else {
+      instance._platform = 'iOS';
       IosDeviceInfo iosDeviceInfo = await plugin.iosInfo;
       instance._iosDeviceInfo = iosDeviceInfo;
       String platformVersion;
@@ -48,6 +51,7 @@ class DeviceInfo {
       } on PlatformException {
         platformVersion = 'Unknown';
       }
+      instance._platformVersion = platformVersion;
     }
     return instance;
   }

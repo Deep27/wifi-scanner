@@ -15,6 +15,7 @@ import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/user.dart';
 import 'package:wifi_scanner/model/user_repository.dart';
 import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/utils/http_utils.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 final _LOG = Logger();
@@ -185,20 +186,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _postRegister(User user) async {
-    Map<String, String> headers = {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.hostHeader: 'wifi-analyzer.4qube.ru'
-    };
     _LOG.i(user.toMap());
-    Response response = await post('http://wifi-analyzer.4qube.ru/api/register',
-        headers: headers, body: json.encode(user.toMap()));
+    Response response = await HttpUtils.registerUser(user);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
       _LOG.i(response.body);
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
       final prefs = await SharedPreferences.getInstance();
+      final deviceInfo = await DeviceInfo.instance;
+      prefs.setString('deviceInfoSerialId', Platform.isAndroid ? deviceInfo.androidDeviceInfo.androidId : deviceInfo.iosDeviceInfo.identifierForVendor);
+      prefs.setString('platform', Platform.isAndroid ? 'Android' : 'iOS');
+      prefs.setString('platformVersion', Platform.isAndroid ? deviceInfo.androidDeviceInfo.version : deviceInfo.iosDeviceInfo.systemVersion);
+      prefs.setString('deviceModel', Platform.isAndroid ? deviceInfo.androidDeviceInfo.device : deviceInfo.iosDeviceInfo.model);
       prefs.setString('profile', json.encode(profile.toMap()));
       prefs.setString('user', json.encode(user.toMap()));
       Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
