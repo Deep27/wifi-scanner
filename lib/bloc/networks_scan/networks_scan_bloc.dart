@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
@@ -8,6 +9,16 @@ import 'package:wifi_scanner/permission_handler.dart';
 
 class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
   static const _platform = const MethodChannel('network/wifi');
+
+  SharedPreferences _prefs;
+
+  NetworksScanBloc() {
+    _initPrefs();
+  }
+
+  _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   NetworksScanState get initialState => InitialNetworksScanState();

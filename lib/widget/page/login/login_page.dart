@@ -38,8 +38,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _gospController = TextEditingController();
-  final _branchController = TextEditingController();
+  final _gospController = TextEditingController(text: "9040");
+  final _branchController = TextEditingController(text: "01224");
 
   LoginBloc _loginBloc;
   AuthBloc _authBloc;
