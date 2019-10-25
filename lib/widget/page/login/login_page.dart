@@ -256,8 +256,7 @@ class _LoginPageState extends State<LoginPage> {
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
       final prefs = await SharedPreferences.getInstance();
-      final deviceInfo = await DeviceInfo.instance; 
-      _LOG.i("platform version: ${deviceInfo.androidDeviceInfo.version}");
+      final deviceInfo = await DeviceInfo.instance;
       prefs.setString('deviceInfoSerialId', Platform.isAndroid ? deviceInfo.androidDeviceInfo.androidId : deviceInfo.iosDeviceInfo.identifierForVendor);
       prefs.setString('platform', Platform.isAndroid ? 'Android' : 'iOS');
       prefs.setString('platformVersion', deviceInfo.platformVersion);
