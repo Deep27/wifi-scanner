@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_bloc.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
-import 'package:wifi_scanner/model/spot_data.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/widget/page/device_info/deviceinfo_page.dart';
 import 'package:wifi_scanner/widget/page/speedtest/speedtest_page.dart';
@@ -65,7 +64,7 @@ class _SpotsPageState extends State<SpotsPage> {
                     }
                     final networksScanBloc =
                         BlocProvider.of<NetworksScanBloc>(context);
-                    timer = Timer(Duration(minutes: NetworksScanBloc.interval), () => networksScanBloc.add(StartScan())); 
+                    timer = Timer(Duration(seconds: NetworksScanBloc.interval), () => networksScanBloc.add(StartScan()));  // @TODO replace with minutes
                     networksScanBloc.add(StartScan());
                   }
                 },
@@ -84,7 +83,7 @@ class _SpotsPageState extends State<SpotsPage> {
               if (timer != null) {
                 timer.cancel();
               }
-              timer = Timer(Duration(minutes: state.newInterval), () => networksScanBloc.add(StartScan()));
+              timer = Timer(Duration(seconds: state.newInterval), () => networksScanBloc.add(StartScan())); // @TODO repace with minutes
               return Container(
                 width: double.infinity,
                 child: ListView.builder(

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
+import 'package:wifi_scanner/model/profile.dart';
 import 'package:wifi_scanner/model/scan_result.dart';
 import 'package:wifi_scanner/permission_handler.dart';
 import 'package:wifi_scanner/utils/current_network_utils.dart';
@@ -88,10 +89,15 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         CurrentNetworkUtils cnu = await CurrentNetworkUtils.instance;
         String usedSsid = cnu.wifiName;
         String usedBssid = cnu.bssid;
+        String ip = cnu.wifiIp;
 
         Map usedNetwork = networksAvailable.firstWhere((n) =>
             n[ScanResult.columnSsid] == usedSsid &&
             n[ScanResult.columnBssid] == usedBssid);
+
+        Map speedtestResults = await _platform.invokeMapMethod('speedtest');
+        usedNetwork['internetSpeed'] = speedtestResults['megabits'];
+        usedNetwork['ip'] = ip;
 
         Map requestBody = {
           'time': time,
@@ -106,18 +112,32 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
         // send data or save to db
         Response response = await HttpUtils.sendScanResults(requestBody);
 
+        _LOG.i('before profile response');
+        _LOG.i('"$profileCode"'); 
+
+        // Response getProfileResponse = HttpUtils.getProfile(profileCode);
+        _LOG.i('profile response: ${response.body}');
+
         int statusCode = response.statusCode;
         if (statusCode == 200) {
           _LOG.i(response.body);
-          int lastProfileUpdate = json.decode(_prefs.getString('profile'))['updateAt'];
-          int newInterval = json.decode(_prefs.getString('profile'))['updatePeriod'];
-          if (lastProfileUpdate != lastUpdate) {
-            _LOG.i('Profile updated! New interval: $newInterval');
-            lastUpdate = lastProfileUpdate;
-            // interval = profile['updatePeriod'];
-            interval = newInterval;
-            // timer = Timer.periodic(Duration(seconds: interval), (t) => scan());
-          }
+          // if (getProfileResponse.statusCode == 200) {
+            // Profile profile =
+                // Profile.fromMap(json.decode(getProfileResponse.body));
+            _LOG.i('got profile');
+            // int lastProfileUpdate = profile.updateAt;
+            int lastProfileUpdate = profileUpdatedAt;
+            if (lastProfileUpdate != lastUpdate) {
+              lastUpdate = lastProfileUpdate;
+              // int newInterval = profile.updatePeriod;
+              int newInterval = 10;
+              _LOG.i('Profile updated! New interval: $newInterval');
+              // interval = profile['updatePeriod'];
+              interval = newInterval;
+              // timer = Timer.periodic(Duration(seconds: interval), (t) => scan());
+            }
+          // }
+          _LOG.i('before success');
           yield ScanSuccess(result, interval);
         } else {
           _LOG.e(response.body);
@@ -128,8 +148,6 @@ class NetworksScanBloc extends Bloc<NetworksScanEvent, NetworksScanState> {
       }
     }
   }
-
-  _testSpeed() {}
 
   _testAwailability() {}
 }
