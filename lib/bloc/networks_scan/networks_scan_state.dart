@@ -17,11 +17,12 @@ class ScanningNetworks extends NetworksScanState {
 
 class ScanSuccess extends NetworksScanState {
   final List<ScanResult> scanResults;
+  final int newInterval;
 
-  ScanSuccess(this.scanResults);
+  ScanSuccess(this.scanResults, this.newInterval);
 
   @override
-  List<Object> get props => [scanResults];
+  List<Object> get props => [scanResults, newInterval];
 }
 
 class ScanError extends NetworksScanState {
@@ -31,4 +32,4 @@ class ScanError extends NetworksScanState {
 
   @override
   List<Object> get props => [errorMessage];
-}
+} 

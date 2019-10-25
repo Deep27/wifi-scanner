@@ -252,7 +252,6 @@ class _LoginPageState extends State<LoginPage> {
     _LOG.i(response.body);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
-      _LOG.i(response.body);
       Profile profile = Profile.fromMap(json.decode(response.body));
       _LOG.i(profile.toString());
       final prefs = await SharedPreferences.getInstance();

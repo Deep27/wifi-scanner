@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -40,6 +42,8 @@ class _SpotsPageState extends State<SpotsPage> {
     networksScanBloc.close();
   }
 
+  Timer timer;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
@@ -55,9 +59,15 @@ class _SpotsPageState extends State<SpotsPage> {
                 label: Text('Scan'),
                 tooltip: 'scan networks',
                 onPressed: () {
-                  final networksScanBloc =
-                      BlocProvider.of<NetworksScanBloc>(context);
-                  networksScanBloc.add(StartScan());
+                  if (!(state is ScanningNetworks)) {
+                    if (timer != null) {
+                      timer.cancel();
+                    }
+                    final networksScanBloc =
+                        BlocProvider.of<NetworksScanBloc>(context);
+                    timer = Timer(Duration(minutes: NetworksScanBloc.interval), () => networksScanBloc.add(StartScan())); 
+                    networksScanBloc.add(StartScan());
+                  }
                 },
               );
             },
@@ -71,10 +81,15 @@ class _SpotsPageState extends State<SpotsPage> {
           bloc: networksScanBloc,
           builder: (BuildContext context, NetworksScanState state) {
             if (state is ScanSuccess) {
+              if (timer != null) {
+                timer.cancel();
+              }
+              timer = Timer(Duration(minutes: state.newInterval), () => networksScanBloc.add(StartScan()));
               return Container(
                 width: double.infinity,
                 child: ListView.builder(
-                  itemBuilder: (ctx, index) => SpotListItem(state.scanResults[index]),
+                  itemBuilder: (ctx, index) =>
+                      SpotListItem(state.scanResults[index]),
                   itemCount: state.scanResults.length,
                 ),
               );
