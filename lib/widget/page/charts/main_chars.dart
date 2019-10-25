@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/model/device_info.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/utils/current_network_utils.dart';
+import 'package:wifi_scanner/widget/page/pdf/pdf_view.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -590,6 +591,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 trailing: new Icon(Icons.supervised_user_circle),
                 onTap: () {
                   Navigator.of(context).pop();
+                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
+                }
+            ),
+            new ListTile(
+                title: new Text("Сформировать отчет"),
+                trailing: new Icon(Icons.picture_as_pdf),
+                onTap: () {
+                  new GeneratePDF().createFile();
                   //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
                 }
             ),
