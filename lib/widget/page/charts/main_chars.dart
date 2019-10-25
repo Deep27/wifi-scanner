@@ -58,10 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 20.0
                             : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400
+                        fontWeight: MediaQuery.of(context).size.width > 470
                             ? FontWeight.normal
                             : FontWeight.bold,
                         //fontSize: 20.0,
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 30.0
                             : 15.0,
                         //fontSize: 30.0,
@@ -110,10 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 20.0
                             : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400
+                        fontWeight: MediaQuery.of(context).size.width > 470
                             ? FontWeight.normal
                             : FontWeight.bold,
                         color: Colors.blueAccent,
@@ -131,11 +131,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      MediaQuery.of(context).size.width > 400
+                      MediaQuery.of(context).size.width > 470
                           ? "Доступно - 10/Не доступно - 20"
                           : "Доступно - 10\nНе доступно - 20",
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 15.0
                             : 10.0,
                       ),
@@ -170,10 +170,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 20.0
                             : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400
+                        fontWeight: MediaQuery.of(context).size.width > 470
                             ? FontWeight.normal
                             : FontWeight.bold,
                         color: Colors.blueAccent,
@@ -185,14 +185,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       priceVal,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 30.0
                             : 20.0,
                         //fontSize: 30.0,
                       ),
                     ),
                   ),
-                  MediaQuery.of(context).size.width > 400
+                  MediaQuery.of(context).size.width > 470
                       ? Padding(
                           padding: EdgeInsets.all(1.0),
                           child: Text(
@@ -253,10 +253,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           title,
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width > 400
+                            fontSize: MediaQuery.of(context).size.width > 470
                                 ? 20.0
                                 : 12.0,
-                            fontWeight: MediaQuery.of(context).size.width > 400
+                            fontWeight: MediaQuery.of(context).size.width > 470
                                 ? FontWeight.normal
                                 : FontWeight.bold,
                             color: Colors.blueAccent,
@@ -287,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Модель устройства:",
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.blueGrey,
@@ -301,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Платформа:",
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.blueGrey,
@@ -314,7 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "ID Устройства:",
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.blueGrey,
@@ -327,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "IP Устройства:",
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.blueGrey,
@@ -353,7 +353,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         '${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.model : _deviceInfo.iosDeviceInfo.model}',
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.black,
@@ -367,7 +367,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         '${(Platform.isAndroid) ? _deviceInfo.platformVersion : _deviceInfo.iosDeviceInfo.systemVersion}',
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.black,
@@ -380,9 +380,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         '${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.androidId : _deviceInfo.iosDeviceInfo.identifierForVendor}',
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
-                              : 8.0,
+                              : Platform.isAndroid ? 12 :8.0,
                           color: Colors.black,
                         ),
                       ),
@@ -393,7 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         '192.168.0.1',
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width > 400
+                          fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
                               : 12.0,
                           color: Colors.black,
@@ -430,10 +430,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 20.0
                             : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400
+                        fontWeight: MediaQuery.of(context).size.width > 470
                             ? FontWeight.normal
                             : FontWeight.bold,
                         color: Colors.blueAccent,
@@ -491,10 +491,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400
+                        fontSize: MediaQuery.of(context).size.width > 470
                             ? 20.0
                             : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400
+                        fontWeight: MediaQuery.of(context).size.width > 470
                             ? FontWeight.normal
                             : FontWeight.bold,
                         color: Colors.blueAccent,
@@ -626,7 +626,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: myCircularItems(
-                  MediaQuery.of(context).size.width > 400
+                  MediaQuery.of(context).size.width > 470
                       ? "Доступность ресурсов"
                       : "Доступность\n   ресурсов",
                   ""),
@@ -634,7 +634,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: myTextItems(
-                  MediaQuery.of(context).size.width > 400
+                  MediaQuery.of(context).size.width > 470
                       ? "Ср.входящее соединение"
                       : "Ср.входящее\nсоединение",
                   "1.61 МБайт/с"),
@@ -642,7 +642,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: myTextItems(
-                  MediaQuery.of(context).size.width > 400
+                  MediaQuery.of(context).size.width > 470
                       ? "Ср.исходящее соединение"
                       : "Ср.исходящее\nсоединение",
                   "868.28 КБайт/с"),
@@ -653,7 +653,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: editParams(MediaQuery.of(context).size.width > 400
+              child: editParams(MediaQuery.of(context).size.width > 470
                   ? "Редактирование настроек"
                   : "Редактирование\n       настроек"),
             ),
