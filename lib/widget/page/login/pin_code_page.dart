@@ -5,8 +5,8 @@ import 'package:passcode_screen/circle.dart';
 import 'package:passcode_screen/keyboard.dart';
 import 'package:passcode_screen/passcode_screen.dart';
 import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/widget/page/charts/main_chars.dart';
 import 'package:wifi_scanner/widget/page/login/login_faq.dart';
-import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 
 class PinCodePage extends StatefulWidget {
@@ -79,7 +79,8 @@ class _PinCodePageState extends State<PinCodePage> {
         this.isAuthenticated = isValid;
       });
     }
-    Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+    //Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+    Navigator.of(context).pushReplacement(Router.createRoute(MyHomePage(title: 'Общая информация')));
   }
 
   _onPasscodeCancelled() {

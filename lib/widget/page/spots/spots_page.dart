@@ -99,7 +99,7 @@ class _SpotsPageState extends State<SpotsPage> {
             } else {
               return Center(
                 child: Text(
-                  'Networks information will be here.',
+                  'Отображение информации',
                   style: TextStyle(fontSize: 25),
                 ),
               );
@@ -109,7 +109,7 @@ class _SpotsPageState extends State<SpotsPage> {
       );
 
   _getAppBar() => AppBar(
-        title: const Text('Sberbank Intermeter'),
+        title: const Text('Интерметр'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.file_download),
