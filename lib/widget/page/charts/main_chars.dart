@@ -449,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         size: 30.0,
                       ),
                       onPressed: () {
-                        Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
+                        Navigator.of(context).push(Router.createRoute(SpotsPage()));
                       }),
 
 //                  Padding(
@@ -572,7 +572,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 trailing: new Icon(Icons.apps),
                 onTap: () {
                   Navigator.of(context).pop();
-                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("Second Page")));
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => SpotsPage()));
                 }
             ),
             new ListTile(
@@ -594,10 +594,9 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
                 title: new Text("Выход"),
                 trailing: new Icon(Icons.exit_to_app),
-                onTap: () {
-                  Navigator.of(context).pop();
+                onTap: ()=> exit(0)
                   //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
-                }
+
             ),
             new Divider(),
             new ListTile(
