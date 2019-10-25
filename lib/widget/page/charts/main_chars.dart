@@ -535,16 +535,16 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              //
+              //TODO: Сделать выпадающее меню
             }),
         title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(FontAwesomeIcons.chartLine),
-              onPressed: () {
-                //
-              }),
-        ],
+//        actions: <Widget>[
+//          IconButton(
+//              icon: Icon(FontAwesomeIcons.chartLine),
+//              onPressed: () {
+//                //
+//              }),
+//        ],
       ),
       body: Container(
         color: Color(0xffE5E5E5),
