@@ -22,6 +22,9 @@ class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences initShareStatePrefs;
   DeviceInfo _deviceInfo;
 
+  String currentProfilePic = "https://avatars3.githubusercontent.com/u/16825392?s=460&v=4";
+  String otherProfilePic = "https://yt3.ggpht.com/-2_2skU9e2Cw/AAAAAAAAAAI/AAAAAAAAAAA/6NpH9G8NWf4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg";
+
   var data = [0.0, 1.0, 3.0, 4.0, 7.0, 8.0, 9.0, 5.0, 10.0, 5.0, 12.0];
   var data1 = [0.0, -2.0, 3.5, -2.0, 0.5, 0.7, 0.8, 1.0, 2.0, 3.0, 3.2];
 
@@ -532,11 +535,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              //TODO: Сделать выпадающее меню
-            }),
         title: Text(widget.title),
 //        actions: <Widget>[
 //          IconButton(
@@ -546,6 +544,71 @@ class _MyHomePageState extends State<MyHomePage> {
 //              }),
 //        ],
       ),
+      drawer: new Drawer(
+        child: new ListView(
+          children: <Widget>[
+            new UserAccountsDrawerHeader(
+              //accountEmail: new Text("bramvbilsen@gmail.com"),
+              accountName: new Text("Артем Соковец", style: TextStyle(color: Colors.white),),
+              currentAccountPicture: new GestureDetector(
+                child: new CircleAvatar(
+                  backgroundImage: new NetworkImage(currentProfilePic),
+                ),
+              ),
+              otherAccountsPictures: <Widget>[
+
+              ],
+//              decoration: new BoxDecoration(
+//                  image: new DecorationImage(
+//                      image: new NetworkImage("https://img00.deviantart.net/35f0/i/2015/018/2/6/low_poly_landscape__the_river_cut_by_bv_designs-d8eib00.jpg"),
+//                      fit: BoxFit.fill
+//                  )
+//              ),
+            ),
+            new ListTile(
+                title: new Text("Тестирование сети"),
+                trailing: new Icon(Icons.apps),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("Second Page")));
+                }
+            ),
+            new ListTile(
+                title: new Text("Изменение ВСП"),
+                trailing: new Icon(Icons.edit),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
+                }
+            ),
+            new ListTile(
+                title: new Text("Смена пользователя"),
+                trailing: new Icon(Icons.supervised_user_circle),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
+                }
+            ),
+            new ListTile(
+                title: new Text("Выход"),
+                trailing: new Icon(Icons.exit_to_app),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("First Page")));
+                }
+            ),
+            new Divider(),
+            new ListTile(
+              title: new Text("На главную страницу"),
+              trailing: new Icon(Icons.cancel),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+
+
+
       body: Container(
         color: Color(0xffE5E5E5),
         child: StaggeredGridView.count(
