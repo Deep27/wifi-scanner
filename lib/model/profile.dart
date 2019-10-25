@@ -8,6 +8,7 @@ class Profile {
   static final columnUpdatePeriod = 'updatePeriod';
   static final columnWebResources = 'webResources';
   static final columnTcpResources = 'tcpResources';
+  static final columnUpdateAt = 'updateAt';
 
   String code;
   int alarmSignal;
@@ -15,6 +16,7 @@ class Profile {
   int updatePeriod;
   List<Map<String, String>> webResources = [];
   List<Map<String, dynamic>> tcpResources = [];
+  int updateAt; 
 
   Profile.fromMap(Map map) {
     code = map[columnCode];
@@ -30,6 +32,7 @@ class Profile {
         .cast<Map<dynamic, dynamic>>()
         .map((r) => r.cast<String, dynamic>())
         .toList());
+    updateAt = DateTime.parse(map[columnUpdateAt]).millisecondsSinceEpoch;
   }
 
   toMap() => {
@@ -38,7 +41,8 @@ class Profile {
       columnUpdatePeriod: updatePeriod,
       columnWifiNetworkSSIDs: wifiNetworksSSIDs,
       columnWebResources: webResources,
-      columnTcpResources: tcpResources
+      columnTcpResources: tcpResources,
+      columnUpdateAt: updateAt
     }; 
 
   @override
@@ -50,6 +54,7 @@ class Profile {
       $columnUpdatePeriod : $updatePeriod
       $columnWebResources : $webResources
       $columnTcpResources : $tcpResources
+      $columnUpdateAt: $updateAt
     ''';
   }
 }

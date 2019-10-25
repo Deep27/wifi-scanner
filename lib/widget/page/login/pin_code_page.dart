@@ -7,7 +7,6 @@ import 'package:passcode_screen/passcode_screen.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/widget/page/charts/main_chars.dart';
 import 'package:wifi_scanner/widget/page/login/login_faq.dart';
-import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 
 class PinCodePage extends StatefulWidget {

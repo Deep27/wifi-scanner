@@ -8,6 +8,8 @@ import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/model/device_info.dart';
+import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -447,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         size: 30.0,
                       ),
                       onPressed: () {
-                        //TODO:ПЕРЕХОД К РОМЕ
+                        Navigator.of(context).pushReplacement(Router.createRoute(SpotsPage()));
                       }),
 
 //                  Padding(

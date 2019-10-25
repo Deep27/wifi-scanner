@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -5,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_bloc.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_event.dart';
 import 'package:wifi_scanner/bloc/networks_scan/networks_scan_state.dart';
-import 'package:wifi_scanner/model/spot_data.dart';
 import 'package:wifi_scanner/route/router.dart';
 import 'package:wifi_scanner/widget/page/device_info/deviceinfo_page.dart';
 import 'package:wifi_scanner/widget/page/speedtest/speedtest_page.dart';
@@ -40,6 +41,8 @@ class _SpotsPageState extends State<SpotsPage> {
     networksScanBloc.close();
   }
 
+  Timer timer;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
@@ -55,9 +58,15 @@ class _SpotsPageState extends State<SpotsPage> {
                 label: Text('Scan'),
                 tooltip: 'scan networks',
                 onPressed: () {
-                  final networksScanBloc =
-                      BlocProvider.of<NetworksScanBloc>(context);
-                  networksScanBloc.add(StartScan());
+                  if (!(state is ScanningNetworks)) {
+                    if (timer != null) {
+                      timer.cancel();
+                    }
+                    final networksScanBloc =
+                        BlocProvider.of<NetworksScanBloc>(context);
+                    timer = Timer(Duration(seconds: NetworksScanBloc.interval), () => networksScanBloc.add(StartScan()));  // @TODO replace with minutes
+                    networksScanBloc.add(StartScan());
+                  }
                 },
               );
             },
@@ -71,10 +80,15 @@ class _SpotsPageState extends State<SpotsPage> {
           bloc: networksScanBloc,
           builder: (BuildContext context, NetworksScanState state) {
             if (state is ScanSuccess) {
+              if (timer != null) {
+                timer.cancel();
+              }
+              timer = Timer(Duration(seconds: state.newInterval), () => networksScanBloc.add(StartScan())); // @TODO repace with minutes
               return Container(
                 width: double.infinity,
                 child: ListView.builder(
-                  itemBuilder: (ctx, index) => SpotListItem(state.scanResults[index]),
+                  itemBuilder: (ctx, index) =>
+                      SpotListItem(state.scanResults[index]),
                   itemCount: state.scanResults.length,
                 ),
               );
@@ -85,7 +99,7 @@ class _SpotsPageState extends State<SpotsPage> {
             } else {
               return Center(
                 child: Text(
-                  'Networks information will be here.',
+                  'Отображение информации',
                   style: TextStyle(fontSize: 25),
                 ),
               );
@@ -95,7 +109,7 @@ class _SpotsPageState extends State<SpotsPage> {
       );
 
   _getAppBar() => AppBar(
-        title: const Text('Sberbank Intermeter'),
+        title: const Text('Интерметр'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.file_download),
