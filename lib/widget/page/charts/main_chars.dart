@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scanner/model/device_info.dart';
 import 'package:wifi_scanner/route/router.dart';
+import 'package:wifi_scanner/utils/current_network_utils.dart';
 import 'package:wifi_scanner/widget/page/spots/spots_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -23,6 +24,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences initShareStatePrefs;
   DeviceInfo _deviceInfo;
+  CurrentNetworkUtils _currentNetworkUtils;
 
   String currentProfilePic = "https://avatars3.githubusercontent.com/u/16825392?s=460&v=4";
   String otherProfilePic = "https://yt3.ggpht.com/-2_2skU9e2Cw/AAAAAAAAAAI/AAAAAAAAAAA/6NpH9G8NWf4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg";
@@ -393,7 +395,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding:
                           EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
                       child: Text(
-                        '192.168.0.1',
+                        _currentNetworkUtils.wifiIp,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width > 470
                               ? 20.0
@@ -680,7 +682,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     initStatePrefs();
-    _getDeviceInfo();
+    _init();
     super.initState();
   }
 
@@ -691,10 +693,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _getDeviceInfo() async {
+  _init() async {
     DeviceInfo deviceInfo = await DeviceInfo.instance;
+    CurrentNetworkUtils currentNetworkUtils = await CurrentNetworkUtils.instance;
     setState(() {
       _deviceInfo = deviceInfo;
+      _currentNetworkUtils = currentNetworkUtils;
     });
   }
 }

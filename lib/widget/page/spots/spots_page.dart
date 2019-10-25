@@ -109,7 +109,7 @@ class _SpotsPageState extends State<SpotsPage> {
       );
 
   _getAppBar() => AppBar(
-        title: const Text('Интерметр'),
+        title: const Text('Инструментарий'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.file_download),
