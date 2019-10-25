@@ -22,9 +22,6 @@ class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences initShareStatePrefs;
   DeviceInfo _deviceInfo;
 
-
-
-
   var data = [0.0, 1.0, 3.0, 4.0, 7.0, 8.0, 9.0, 5.0, 10.0, 5.0, 12.0];
   var data1 = [0.0, -2.0, 3.5, -2.0, 0.5, 0.7, 0.8, 1.0, 2.0, 3.0, 3.2];
 
@@ -58,7 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 20.0
+                            : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400
+                            ? FontWeight.normal
+                            : FontWeight.bold,
+                        //fontSize: 20.0,
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -68,7 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 30.0
+                            : 15.0,
+                        //fontSize: 30.0,
                       ),
                     ),
                   ),
@@ -87,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
       elevation: 14.0,
       borderRadius: BorderRadius.circular(24.0),
       shadowColor: Color(0x802196F3),
-
       child: Center(
         child: Padding(
           padding: EdgeInsets.all(8.0),
@@ -102,7 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400 ? 20.0 : 10.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 20.0
+                            : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400
+                            ? FontWeight.normal
+                            : FontWeight.bold,
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -115,13 +125,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       chartType: CircularChartType.Pie,
                     ),
                   ),
-
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      "Доступно - 10/Не доступно - 20",
+                      MediaQuery.of(context).size.width > 400
+                          ? "Доступно - 10/Не доступно - 20"
+                          : "Доступно - 10\nНе доступно - 20",
                       style: TextStyle(
-                        fontSize: 15.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 15.0
+                            : 10.0,
                       ),
                     ),
                   ),
@@ -154,8 +167,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400 ? 20.0 : 12.0,
-                        fontWeight: MediaQuery.of(context).size.width > 400 ? FontWeight.normal : FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 20.0
+                            : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400
+                            ? FontWeight.normal
+                            : FontWeight.bold,
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -165,32 +182,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       priceVal,
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width > 400 ? 30.0 : 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 30.0
+                            : 20.0,
                         //fontSize: 30.0,
                       ),
                     ),
                   ),
-                  MediaQuery.of(context).size.width > 400 ? Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ) :
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 5.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  )
-                  ,
+                  MediaQuery.of(context).size.width > 400
+                      ? Padding(
+                          padding: EdgeInsets.all(1.0),
+                          child: Text(
+                            subtitle,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(1.0),
+                          child: Text(
+                            subtitle,
+                            style: TextStyle(
+                              fontSize: 5.0,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: new Sparkline(
@@ -231,7 +250,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           title,
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: MediaQuery.of(context).size.width > 400
+                                ? 20.0
+                                : 12.0,
+                            fontWeight: MediaQuery.of(context).size.width > 400
+                                ? FontWeight.normal
+                                : FontWeight.bold,
                             color: Colors.blueAccent,
                           ),
                         ),
@@ -260,7 +284,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Модель устройства:",
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.blueGrey,
                         ),
                       ),
@@ -272,7 +298,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Платформа:",
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.blueGrey,
                         ),
                       ),
@@ -283,7 +311,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "ID Устройства:",
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                      child: Text(
+                        "IP Устройства:",
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.blueGrey,
                         ),
                       ),
@@ -307,7 +350,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         '${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.model : _deviceInfo.iosDeviceInfo.model}',
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.black,
                         ),
                       ),
@@ -319,7 +364,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         '${(Platform.isAndroid) ? _deviceInfo.platformVersion : _deviceInfo.iosDeviceInfo.systemVersion}',
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.black,
                         ),
                       ),
@@ -330,7 +377,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         '${(Platform.isAndroid) ? _deviceInfo.androidDeviceInfo.androidId : _deviceInfo.iosDeviceInfo.identifierForVendor}',
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 8.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                      child: Text(
+                        '192.168.0.1',
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width > 400
+                              ? 20.0
+                              : 12.0,
                           color: Colors.black,
                         ),
                       ),
@@ -365,48 +427,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 20.0
+                            : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400
+                            ? FontWeight.normal
+                            : FontWeight.bold,
                         color: Colors.blueAccent,
                       ),
                     ),
                   ),
 
-//                  Padding(
-//                    padding: EdgeInsets.all(1.0),
-//                    child: Text("sda", style: TextStyle(
-//                      fontSize: 30.0,
-//                    ),),
-//                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
+                  IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.toolbox,
+                        size: 30.0,
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
+                      onPressed: () {
+                        //TODO:ПЕРЕХОД К РОМЕ
+                      }),
 
 //                  Padding(
 //                    padding: EdgeInsets.all(1.0),
@@ -429,7 +468,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
   Material editParams(String title) {
     return Material(
       color: Colors.white,
@@ -446,52 +484,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(.0),
+                    padding: EdgeInsets.all(1.0),
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400
+                            ? 20.0
+                            : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400
+                            ? FontWeight.normal
+                            : FontWeight.bold,
                         color: Colors.blueAccent,
                       ),
                     ),
                   ),
-
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text("sda", style: TextStyle(
-                      fontSize: 30.0,
-                    ),),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
+                  IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.edit,
+                        size: 30.0,
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      "sadasd",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
+                      onPressed: () {
+                        //TODO:ПЕРЕХОД К РОМЕ
+                      }),
 
 //                  Padding(
 //                    padding: EdgeInsets.all(1.0),
@@ -516,8 +530,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -550,15 +562,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: myCircularItems("Доступность ресурсов", ""),
+              child: myCircularItems(
+                  MediaQuery.of(context).size.width > 400
+                      ? "Доступность ресурсов"
+                      : "Доступность\n   ресурсов",
+                  ""),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: myTextItems("Ср.входящее соединение", "1.61 МБайт/с"),
+              child: myTextItems(
+                  MediaQuery.of(context).size.width > 400
+                      ? "Ср.входящее соединение"
+                      : "Ср.входящее\nсоединение",
+                  "1.61 МБайт/с"),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: myTextItems("Ср.исходящее соединение", "868.28 КБайт/с"),
+              child: myTextItems(
+                  MediaQuery.of(context).size.width > 400
+                      ? "Ср.исходящее соединение"
+                      : "Ср.исходящее\nсоединение",
+                  "868.28 КБайт/с"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -566,7 +590,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: editParams("Редактирование настроек"),
+              child: editParams(MediaQuery.of(context).size.width > 400
+                  ? "Редактирование настроек"
+                  : "Редактирование\n       настроек"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -579,8 +605,8 @@ class _MyHomePageState extends State<MyHomePage> {
             StaggeredTile.extent(2, 120.0),
             StaggeredTile.extent(2, 120.0),
             StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(2, 250.0),
-            StaggeredTile.extent(2, 250.0),
+            StaggeredTile.extent(2, 150.0),
+            StaggeredTile.extent(2, 150.0),
           ],
         ),
       ),
