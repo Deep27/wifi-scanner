@@ -22,6 +22,9 @@ class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences initShareStatePrefs;
   DeviceInfo _deviceInfo;
 
+
+
+
   var data = [0.0, 1.0, 3.0, 4.0, 7.0, 8.0, 9.0, 5.0, 10.0, 5.0, 12.0];
   var data1 = [0.0, -2.0, 3.5, -2.0, 0.5, 0.7, 0.8, 1.0, 2.0, 3.0, 3.2];
 
@@ -99,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400 ? 20.0 : 10.0,
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -151,7 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: MediaQuery.of(context).size.width > 400 ? 20.0 : 12.0,
+                        fontWeight: MediaQuery.of(context).size.width > 400 ? FontWeight.normal : FontWeight.bold,
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -161,11 +165,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       priceVal,
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: MediaQuery.of(context).size.width > 400 ? 30.0 : 20.0,
+                        //fontSize: 30.0,
                       ),
                     ),
                   ),
-                  Padding(
+                  MediaQuery.of(context).size.width > 400 ? Padding(
                     padding: EdgeInsets.all(1.0),
                     child: Text(
                       subtitle,
@@ -174,7 +179,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.blueGrey,
                       ),
                     ),
-                  ),
+                  ) :
+                  Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child: Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 5.0,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  )
+                  ,
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: new Sparkline(
@@ -500,6 +516,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
